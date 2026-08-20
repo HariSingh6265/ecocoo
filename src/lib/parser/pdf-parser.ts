@@ -1,4 +1,6 @@
-import pdfParse from 'pdf-parse';
+// Using internal pdf-parse library file to avoid the Next.js/Webpack debug mode bug in pdf-parse/index.js
+// @ts-ignore
+const pdfParse = require('pdf-parse/lib/pdf-parse.js');
 
 export interface PDFParseResult {
   text: string;
@@ -12,8 +14,8 @@ export interface PDFParseResult {
 export async function parsePDFBuffer(buffer: Buffer): Promise<PDFParseResult> {
   try {
     const data = await pdfParse(buffer);
-    const text = data.text || '';
-    const numPages = data.numpages || 1;
+    const text = (data && data.text) ? data.text : '';
+    const numPages = (data && data.numpages) ? data.numpages : 1;
     const cleanWords = text.trim().split(/\s+/).filter(Boolean);
 
     // If less than 40 words on average per page or total < 50 words, likely scanned / image-only
@@ -39,7 +41,7 @@ export async function parsePDFBuffer(buffer: Buffer): Promise<PDFParseResult> {
     return {
       text,
       numPages,
-      info: data.info || {},
+      info: (data && data.info) ? data.info : {},
       isScannedOrLowText,
       hasMultiColumns,
       hasTables,

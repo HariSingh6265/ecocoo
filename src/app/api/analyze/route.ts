@@ -3,7 +3,7 @@ import { parseResume } from '@/lib/parser/resume-parser';
 import { runATSAnalysis } from '@/lib/ats/engine';
 import { getCurrentUser } from '@/lib/auth/auth';
 import { prisma } from '@/lib/db/prisma';
-import { saveResumeFile } from '@/lib/storage';
+import { saveResumeFile, StoredFileResult } from '@/lib/storage';
 
 export const dynamic = 'force-dynamic';
 
@@ -46,14 +46,12 @@ export async function POST(req: NextRequest) {
     const arrayBuffer = await file.arrayBuffer();
     const buffer = Buffer.from(arrayBuffer);
 
-    // 1. Save uploaded resume file (to Supabase Storage if configured, or local uploads/ folder)
-    const storageResult = await saveResumeFile(buffer, filename, mimeType);
-
-    // 2. Parse resume text & layout
+    // 1. Parse resume text & layout
     let parsedData;
     try {
       parsedData = await parseResume(buffer, filename, mimeType);
     } catch (parseError: any) {
+      console.error('Resume parsing failed:', parseError);
       return NextResponse.json(
         {
           error: parseError?.message || 'Unable to parse document. Please ensure the file is not corrupted or password-protected.',
@@ -62,7 +60,7 @@ export async function POST(req: NextRequest) {
       );
     }
 
-    // 3. Run ATS scoring engine
+    // 2. Run ATS scoring engine
     const analysisResult = runATSAnalysis(parsedData, {
       resumeName: filename,
       jobDescription: jobDescription.trim(),
@@ -70,8 +68,26 @@ export async function POST(req: NextRequest) {
       jobCompany,
     });
 
-    // 4. Save record to database
-    const currentUser = await getCurrentUser();
+    // 3. Save uploaded resume file (to Supabase Storage if configured, or local)
+    let storageResult: StoredFileResult = {
+      storedFileName: filename,
+      fileUrl: '',
+      storageProvider: 'ephemeral',
+    };
+    try {
+      storageResult = await saveResumeFile(buffer, filename, mimeType);
+    } catch (storageErr) {
+      console.warn('Storage save skipped:', storageErr);
+    }
+
+    // 4. Save record to database (if DB is reachable)
+    let currentUser = null;
+    try {
+      currentUser = await getCurrentUser();
+    } catch (authErr) {
+      console.warn('Auth check skipped:', authErr);
+    }
+
     let savedAnalysisId = analysisResult.id;
 
     try {
@@ -131,7 +147,7 @@ export async function POST(req: NextRequest) {
       savedAnalysisId = analysisRecord.id;
       analysisResult.id = savedAnalysisId;
     } catch (dbError) {
-      console.error('Failed to persist analysis to DB:', dbError);
+      console.warn('DB persistence skipped or failed:', dbError);
     }
 
     return NextResponse.json({
@@ -146,7 +162,7 @@ export async function POST(req: NextRequest) {
     console.error('Analysis error:', error);
     return NextResponse.json(
       {
-        error: 'An unexpected error occurred while analyzing your resume. Please try again with a valid document.',
+        error: error?.message || 'An unexpected error occurred while analyzing your resume. Please try again with a valid document.',
       },
       { status: 500 }
     );
