@@ -2,16 +2,19 @@
 
 import { useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
-import { User, Mail, Calendar, Settings, LogOut, Shield, Leaf, Award, CheckCircle2 } from "lucide-react";
+import { User, Mail, Calendar, Settings, LogOut, Shield, Leaf, Award, CheckCircle2, Save, Loader2 } from "lucide-react";
 import Navbar from "@/components/layout/navbar";
 import { Card, CardContent, CardHeader, CardTitle, CardDescription, CardFooter } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
+import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 
 export default function ProfilePage() {
   const router = useRouter();
   const [user, setUser] = useState<any>(null);
+  const [name, setName] = useState("");
   const [loading, setLoading] = useState(true);
+  const [saving, setSaving] = useState(false);
   const [profileSaved, setProfileSaved] = useState(false);
   const [profilePref, setProfilePref] = useState("balanced");
 
@@ -21,7 +24,13 @@ export default function ProfilePage() {
         const res = await fetch("/api/auth/me");
         if (res.ok) {
           const data = await res.json();
-          if (data.user) setUser(data.user);
+          if (data.user) {
+            setUser(data.user);
+            setName(data.user.name || "");
+            if (data.user.preferences?.weightProfile) {
+              setProfilePref(data.user.preferences.weightProfile);
+            }
+          }
         }
       } catch (err) {
         console.error(err);
@@ -32,9 +41,30 @@ export default function ProfilePage() {
     loadProfile();
   }, []);
 
-  const handleSavePref = () => {
-    setProfileSaved(true);
-    setTimeout(() => setProfileSaved(false), 3000);
+  const handleSaveProfile = async () => {
+    setSaving(true);
+    setProfileSaved(false);
+    try {
+      const res = await fetch("/api/auth/me", {
+        method: "PATCH",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          name: name.trim(),
+          preferences: { weightProfile: profilePref },
+        }),
+      });
+
+      if (res.ok) {
+        const data = await res.json();
+        setUser((prev: any) => ({ ...prev, name: name.trim() }));
+        setProfileSaved(true);
+        setTimeout(() => setProfileSaved(false), 4000);
+      }
+    } catch (err) {
+      console.error("Save profile error:", err);
+    } finally {
+      setSaving(false);
+    }
   };
 
   const handleLogout = async () => {
@@ -47,7 +77,7 @@ export default function ProfilePage() {
     }
   };
 
-  const displayName = user?.name || "Registered Commuter";
+  const displayName = name || user?.name || "Registered Commuter";
   const displayEmail = user?.email || "commuter@ecocommute.in";
   const displayPoints = user?.greenPoints ?? 100;
   const initialLetter = displayName.charAt(0).toUpperCase();
@@ -58,7 +88,7 @@ export default function ProfilePage() {
       <main className="flex-1 container mx-auto px-4 py-8 max-w-3xl space-y-6">
         <div>
           <h1 className="text-3xl font-bold tracking-tight text-slate-900">User Profile</h1>
-          <p className="text-slate-500 mt-1">Manage your commuter credentials, green credits, and preferences.</p>
+          <p className="text-slate-500 mt-1">Manage your commuter identity, profile name, and routing weights.</p>
         </div>
 
         {/* User Card */}
@@ -90,7 +120,22 @@ export default function ProfilePage() {
               </div>
             </div>
 
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-4 mt-4">
+            {/* Editable Name Field */}
+            <div className="space-y-1.5 pt-2">
+              <Label htmlFor="profile-name" className="text-xs font-bold uppercase text-slate-600">
+                Full Name (Persisted to Database)
+              </Label>
+              <Input
+                id="profile-name"
+                type="text"
+                value={name}
+                onChange={(e) => setName(e.target.value)}
+                placeholder="Enter your full name"
+                className="h-11 rounded-xl bg-slate-50 border-slate-200"
+              />
+            </div>
+
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-4 mt-2">
               <div className="space-y-1.5">
                 <Label className="text-xs font-bold uppercase text-slate-500">Commuter Role</Label>
                 <div className="p-3 border border-slate-200 rounded-xl bg-slate-50 text-slate-800 flex items-center gap-2 text-xs font-semibold">
@@ -118,7 +163,7 @@ export default function ProfilePage() {
           <CardContent className="space-y-4">
             {profileSaved && (
               <div className="p-3 bg-emerald-100 border border-emerald-300 rounded-xl flex items-center gap-2 text-emerald-900 text-xs font-bold">
-                <CheckCircle2 className="w-4 h-4 text-emerald-700" /> Default preferences updated successfully!
+                <CheckCircle2 className="w-4 h-4 text-emerald-700" /> Name and preferences saved to MongoDB Atlas!
               </div>
             )}
             <div className="space-y-2">
@@ -138,8 +183,13 @@ export default function ProfilePage() {
             </div>
           </CardContent>
           <CardFooter className="bg-slate-50 border-t border-slate-100 px-6 py-4 rounded-b-2xl flex justify-end">
-            <Button onClick={handleSavePref} className="bg-emerald-600 hover:bg-emerald-700 rounded-xl font-bold text-xs h-10">
-              Save Preferences
+            <Button
+              onClick={handleSaveProfile}
+              disabled={saving}
+              className="bg-emerald-600 hover:bg-emerald-700 rounded-xl font-bold text-xs h-10 gap-1.5"
+            >
+              {saving ? <Loader2 className="w-3.5 h-3.5 animate-spin" /> : <Save className="w-3.5 h-3.5" />}
+              {saving ? "Saving to Database..." : "Save Name & Settings"}
             </Button>
           </CardFooter>
         </Card>

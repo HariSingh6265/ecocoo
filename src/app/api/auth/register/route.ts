@@ -4,6 +4,8 @@ import { hashPassword, signToken, createAuthCookieHeader } from "@/lib/auth";
 import { getCollection } from "@/lib/db/mongodb";
 import { generateId } from "@/lib/utils";
 
+export const dynamic = "force-dynamic";
+
 const registerSchema = z.object({
   name: z.string().min(2),
   email: z.string().email(),
@@ -34,16 +36,28 @@ export async function POST(req: NextRequest) {
 
     const existing = await usersCol.findOne({ email });
     if (existing) {
-      // For demo convenience, log in if already exists
+      // Update the user's name, role, and password in the database
+      await usersCol.updateOne(
+        { email },
+        {
+          $set: {
+            name,
+            password: hashedPassword,
+            role: role || existing.role,
+            updatedAt: new Date().toISOString(),
+          },
+        }
+      );
+
       const payload = {
         id: existing.id || existing._id || userId,
         email: existing.email,
-        role: existing.role || role,
-        name: existing.name || name,
+        role: role || existing.role || "user",
+        name,
         companyId: existing.companyId,
       };
       const token = await signToken(payload);
-      const response = NextResponse.json({ success: true, user: payload });
+      const response = NextResponse.json({ success: true, user: payload, message: "User updated and logged in" });
       response.headers.set("Set-Cookie", createAuthCookieHeader(token));
       return response;
     }
@@ -61,6 +75,7 @@ export async function POST(req: NextRequest) {
       totalCO2Saved: 0,
       totalMoneySaved: 0,
       createdAt: new Date().toISOString(),
+      updatedAt: new Date().toISOString(),
     };
 
     await usersCol.insertOne(newUser);
