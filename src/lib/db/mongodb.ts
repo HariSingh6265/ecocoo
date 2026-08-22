@@ -1,16 +1,51 @@
 // ─── Dual MongoDB / In-Memory Mock Store ───
-// Guarantees zero crashes and 100% demo uptime whether MongoDB Atlas is online or offline.
+// High-performance serverless connection pooling for Vercel & MongoDB Atlas.
 
 import { MongoClient, Db } from "mongodb";
 import { DEMO_USERS, DEMO_COMPANY, DEMO_EMPLOYEES, DEMO_TRIPS } from "@/lib/demo-data";
 import { generateId } from "@/lib/utils";
 
-const MONGODB_URI = process.env.MONGODB_URI;
+const uri = process.env.MONGODB_URI;
 
-let client: MongoClient | null = null;
-let db: Db | null = null;
+const options = {
+  maxPoolSize: 10,
+  minPoolSize: 0,
+  connectTimeoutMS: 20000,
+  serverSelectionTimeoutMS: 20000,
+  maxIdleTimeMS: 30000,
+};
 
-// ─── In-Memory Mock Database Store ───
+let client: MongoClient;
+let clientPromise: Promise<MongoClient> | null = null;
+
+if (uri) {
+  if (process.env.NODE_ENV === "development") {
+    // In development mode, use a global variable so that the value
+    // is preserved across module reloads caused by HMR (Hot Module Replacement).
+    const globalWithMongo = global as typeof globalThis & {
+      _mongoClientPromise?: Promise<MongoClient>;
+    };
+
+    if (!globalWithMongo._mongoClientPromise) {
+      client = new MongoClient(uri, options);
+      globalWithMongo._mongoClientPromise = client.connect();
+    }
+    clientPromise = globalWithMongo._mongoClientPromise;
+  } else {
+    // In production mode (Vercel Serverless), cache the client promise globally on the container
+    const globalWithMongo = global as typeof globalThis & {
+      _mongoClientPromiseProd?: Promise<MongoClient>;
+    };
+
+    if (!globalWithMongo._mongoClientPromiseProd) {
+      client = new MongoClient(uri, options);
+      globalWithMongo._mongoClientPromiseProd = client.connect();
+    }
+    clientPromise = globalWithMongo._mongoClientPromiseProd;
+  }
+}
+
+// ─── In-Memory Mock Database Store (Used only if no MONGODB_URI is provided) ───
 class MockCollection {
   name: string;
   items: any[];
@@ -82,64 +117,81 @@ class MockCollection {
   }
 
   async findOne(query: any = {}) {
-    const found = this.items.find((item) => this.matches(item, query));
-    return found ? { ...found } : null;
+    const item = this.items.find((i) => this.matches(i, query));
+    return item ? { ...item } : null;
   }
 
   async insertOne(doc: any) {
-    const inserted = {
-      _id: doc._id || doc.id || `doc_${generateId()}`,
-      createdAt: doc.createdAt || new Date().toISOString(),
+    const newDoc = {
+      _id: doc._id || doc.id || `mock_${this.name}_${generateId()}`,
       ...doc,
     };
-    this.items.unshift(inserted);
-    return { insertedId: inserted._id, acknowledged: true };
+    this.items.push(newDoc);
+    return { insertedId: newDoc._id, acknowledged: true };
   }
 
   async insertMany(docs: any[]) {
-    const insertedDocs = docs.map((doc) => ({
-      _id: doc._id || doc.id || `doc_${generateId()}`,
-      createdAt: doc.createdAt || new Date().toISOString(),
+    const newDocs = docs.map((doc) => ({
+      _id: doc._id || doc.id || `mock_${this.name}_${generateId()}`,
       ...doc,
     }));
-    this.items.unshift(...insertedDocs);
-    return { insertedCount: docs.length, acknowledged: true };
+    this.items.push(...newDocs);
+    return { insertedCount: newDocs.length, acknowledged: true };
   }
 
   async updateOne(query: any, update: any) {
-    const index = this.items.findIndex((item) => this.matches(item, query));
+    const index = this.items.findIndex((i) => this.matches(i, query));
     if (index !== -1) {
       if (update.$set) {
         this.items[index] = { ...this.items[index], ...update.$set };
       }
       if (update.$inc) {
-        for (const k of Object.keys(update.$inc)) {
-          this.items[index][k] = (this.items[index][k] || 0) + update.$inc[k];
+        for (const [key, val] of Object.entries(update.$inc)) {
+          this.items[index][key] = (this.items[index][key] || 0) + (val as number);
         }
       }
-      if (!update.$set && !update.$inc) {
-        this.items[index] = { ...this.items[index], ...update };
-      }
-      return { modifiedCount: 1, matchedCount: 1, acknowledged: true };
+      return { modifiedCount: 1, acknowledged: true };
     }
-    return { modifiedCount: 0, matchedCount: 0, acknowledged: true };
+    return { modifiedCount: 0, acknowledged: true };
+  }
+
+  async updateMany(query: any, update: any) {
+    let count = 0;
+    for (let i = 0; i < this.items.length; i++) {
+      if (this.matches(this.items[i], query)) {
+        if (update.$set) {
+          this.items[i] = { ...this.items[i], ...update.$set };
+        }
+        if (update.$inc) {
+          for (const [key, val] of Object.entries(update.$inc)) {
+            this.items[i][key] = (this.items[i][key] || 0) + (val as number);
+          }
+        }
+        count++;
+      }
+    }
+    return { modifiedCount: count, acknowledged: true };
   }
 
   async deleteMany(query: any = {}) {
-    const initialLen = this.items.length;
-    this.items = this.items.filter((item) => !this.matches(item, query));
-    return { deletedCount: initialLen - this.items.length, acknowledged: true };
+    const initial = this.items.length;
+    if (Object.keys(query).length === 0) {
+      this.items = [];
+    } else {
+      this.items = this.items.filter((i) => !this.matches(i, query));
+    }
+    return { deletedCount: initial - this.items.length, acknowledged: true };
   }
 
   async countDocuments(query: any = {}) {
-    return this.items.filter((item) => this.matches(item, query)).length;
+    return this.items.filter((i) => this.matches(i, query)).length;
   }
 }
 
-// Global in-memory mock store
+// In-Memory Demo Data Store
 const mockDb = {
   users: new MockCollection("users", DEMO_USERS),
-  companies: new MockCollection("companies", [DEMO_COMPANY]),
+  companies: new MockCollection("companies", DEMO_COMPANY ? [DEMO_COMPANY] : []),
   employees: new MockCollection("employees", DEMO_EMPLOYEES),
   trips: new MockCollection("trips", DEMO_TRIPS),
   rewards: new MockCollection("rewards", [
@@ -187,23 +239,6 @@ const mockDb = {
       },
       createdAt: new Date(Date.now() - 3600000).toISOString(),
     },
-    {
-      eventId: "evt_init_102",
-      eventType: "reward.earned",
-      companyId: "demo-company-1",
-      employeeId: "GT001",
-      status: "delivered",
-      statusCode: 200,
-      responseMessage: "viaSocket workflow triggered: Corporate Slack channel notification sent",
-      payload: {
-        eventType: "reward.earned",
-        employeeId: "GT001",
-        employeeName: "Rahul Verma",
-        greenPoints: 50,
-        timestamp: new Date(Date.now() - 7200000).toISOString(),
-      },
-      createdAt: new Date(Date.now() - 7200000).toISOString(),
-    },
   ]),
   parking: new MockCollection("parking", [
     {
@@ -216,55 +251,39 @@ const mockDb = {
       hourlyRate: 20,
       companyReserved: true,
     },
-    {
-      name: "Palasia EcoPark & Transit Hub",
-      location: "Old Palasia, AB Road, Indore",
-      totalSpots: 120,
-      evChargingSpots: 35,
-      carpoolReservedSpots: 40,
-      availableSpots: 42,
-      hourlyRate: 15,
-      companyReserved: true,
-    },
-    {
-      name: "MR-10 Metro & Corporate Hub",
-      location: "MR 10 Junction, Indore",
-      totalSpots: 150,
-      evChargingSpots: 40,
-      carpoolReservedSpots: 50,
-      availableSpots: 64,
-      hourlyRate: 15,
-      companyReserved: true,
-    },
   ]),
 };
 
 export async function getDb(): Promise<Db | null> {
-  if (db) return db;
-  const uri = process.env.MONGODB_URI || MONGODB_URI;
-  if (!uri) return null;
+  const currentUri = process.env.MONGODB_URI || uri;
+  if (!currentUri) return null;
 
   try {
-    client = new MongoClient(uri, { serverSelectionTimeoutMS: 10000 });
-    await client.connect();
-    db = client.db();
-    return db;
+    if (!clientPromise) {
+      const activeClient = new MongoClient(currentUri, options);
+      clientPromise = activeClient.connect();
+    }
+    const activeClient = await clientPromise;
+    return activeClient.db();
   } catch (error) {
     console.error("MongoDB Atlas connection error:", error);
+    // Reset promise so next request attempts a fresh connection
+    clientPromise = null;
     return null;
   }
 }
 
 export async function getCollection(name: string): Promise<any> {
-  try {
+  const currentUri = process.env.MONGODB_URI || uri;
+
+  if (currentUri) {
     const realDb = await getDb();
     if (realDb) {
       return realDb.collection(name);
     }
-  } catch (e) {
-    // fallback to mock
   }
 
+  // Fallback to in-memory store only if no MONGODB_URI is configured
   if (!(name in mockDb)) {
     (mockDb as any)[name] = new MockCollection(name);
   }
