@@ -31,8 +31,8 @@ export function haversineDistance(
   return R * c;
 }
 
-// Road distance multiplier (straight line → road distance)
-const ROAD_MULTIPLIER = 1.35;
+// Road distance multiplier (straight line → real urban road distance)
+const ROAD_MULTIPLIER = 1.15;
 
 export function resolveLocation(nameOrId: string): { id?: string; name: string; lat: number; lng: number } | null {
   if (!nameOrId) return null;

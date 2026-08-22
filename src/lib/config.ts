@@ -101,18 +101,19 @@ export interface Location {
 
 export const INDORE_LOCATIONS: Location[] = [
   { id: "vijay-nagar", name: "Vijay Nagar", lat: 22.7533, lng: 75.8937 },
-  { id: "palasia", name: "Palasia", lat: 22.7236, lng: 75.8824 },
-  { id: "rajwada", name: "Rajwada", lat: 22.7196, lng: 75.8577 },
-  { id: "bhawarkua", name: "Bhawarkua", lat: 22.7284, lng: 75.8669 },
-  { id: "rau", name: "Rau", lat: 22.6644, lng: 75.8613 },
-  { id: "ab-road", name: "AB Road", lat: 22.7019, lng: 75.8574 },
+  { id: "palasia", name: "Palasia", lat: 22.7244, lng: 75.8839 },
+  { id: "rajwada", name: "Rajwada", lat: 22.7186, lng: 75.8550 },
+  { id: "bhawarkua", name: "Bhawarkua", lat: 22.6934, lng: 75.8672 },
+  { id: "rau", name: "Rau", lat: 22.6288, lng: 75.8083 },
+  { id: "ab-road", name: "AB Road (LIG Square)", lat: 22.7380, lng: 75.8870 },
   { id: "airport", name: "Devi Ahilya Bai Holkar Airport", lat: 22.7216, lng: 75.8011 },
-  { id: "sapna-sangeeta", name: "Sapna Sangeeta", lat: 22.7301, lng: 75.8741 },
-  { id: "mr-10", name: "MR 10", lat: 22.7628, lng: 75.9090 },
-  { id: "ti-mall", name: "Treasure Island Mall", lat: 22.7238, lng: 75.8892 },
-  { id: "bapat-square", name: "Bapat Square", lat: 22.7195, lng: 75.8760 },
-  { id: "gpo-indore", name: "GPO Indore", lat: 22.7175, lng: 75.8558 },
-  { id: "geeta-bhawan", name: "Geeta Bhawan", lat: 22.7122, lng: 75.8700 },
+  { id: "sapna-sangeeta", name: "Sapna Sangeeta", lat: 22.7050, lng: 75.8710 },
+  { id: "mr-10", name: "MR 10 (Radisson Square)", lat: 22.7590, lng: 75.8970 },
+  { id: "ti-mall", name: "Treasure Island Mall (MG Road)", lat: 22.7208, lng: 75.8778 },
+  { id: "bapat-square", name: "Bapat Square", lat: 22.7602, lng: 75.8789 },
+  { id: "gpo-indore", name: "GPO Indore", lat: 22.7135, lng: 75.8675 },
+  { id: "geeta-bhawan", name: "Geeta Bhawan", lat: 22.7160, lng: 75.8810 },
+  { id: "crystal-it-park", name: "Crystal IT Park", lat: 22.6868, lng: 75.8698 },
 ];
 
 // ─── Green Points Config ───
