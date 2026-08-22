@@ -2,6 +2,8 @@ import { NextRequest, NextResponse } from "next/server";
 import { getCollection } from "@/lib/db/mongodb";
 import { getAuthFromCookies } from "@/lib/auth";
 
+export const dynamic = "force-dynamic";
+
 export async function GET(req: NextRequest, { params }: { params: { id: string } }) {
   try {
     const authUser = await getAuthFromCookies(req.cookies);
