@@ -7,8 +7,7 @@
     "build": "next build",
     "start": "next start",
     "lint": "next lint",
-    "seed": "node scripts/seed-db.js",
-    "seed:supabase": "node scripts/seed-supabase.js"
+    "seed": "node scripts/seed-db.js"
   },
   "dependencies": {
     "@supabase/supabase-js": "^2.112.3",

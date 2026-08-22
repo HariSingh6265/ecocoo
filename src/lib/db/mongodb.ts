@@ -273,18 +273,7 @@ export async function getDb(): Promise<Db | null> {
   }
 }
 
-import { getSupabase, isSupabaseConfigured, SupabaseCollectionAdapter } from "./supabase";
-
 export async function getCollection(name: string): Promise<any> {
-  // 1. If Supabase keys are configured, use Supabase PostgreSQL Adapter
-  if (isSupabaseConfigured()) {
-    const supabase = getSupabase();
-    if (supabase) {
-      return new SupabaseCollectionAdapter(name, supabase);
-    }
-  }
-
-  // 2. If MongoDB Atlas is configured, use MongoDB Collection
   const currentUri = process.env.MONGODB_URI || uri;
   if (currentUri) {
     const realDb = await getDb();
@@ -293,7 +282,7 @@ export async function getCollection(name: string): Promise<any> {
     }
   }
 
-  // 3. Fallback to in-memory store if offline
+  // Fallback to in-memory store if offline
   if (!(name in mockDb)) {
     (mockDb as any)[name] = new MockCollection(name);
   }
