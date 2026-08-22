@@ -1,156 +1,518 @@
-export type ProblemSeverity = 'critical' | 'warning' | 'improvement';
+// // ─── EcoCommute Type Definitions ───
 
-export interface ResumeProblem {
-  id: string;
-  category: 'formatting' | 'content' | 'keywords' | 'experience' | 'contact' | 'ats_compatibility';
-  severity: ProblemSeverity;
-  problem: string;
-  whyItMatters: string;
-  recommendedFix: string;
-}
+// export interface User {
+//   _id?: string;
+//   id?: string;
+//   name: string;
+//   email: string;
+//   password?: string;
+//   role: "user" | "company" | "employee";
+//   companyId?: string;
+//   employeeId?: string;
+//   preferences: {
+//     weightProfile: "balanced" | "cost" | "eco" | "time";
+//     preferredMode?: string;
+//     maxBudget?: number;
+//     maxTime?: number;
+//   };
+//   greenPoints: number;
+//   totalTrips: number;
+//   totalCO2Saved: number;
+//   totalMoneySaved: number;
+//   createdAt: string;
+// }
 
-export interface ResumeStrength {
-  id: string;
-  category: string;
-  title: string;
-  detail: string;
-}
+// export interface Company {
+//   _id?: string;
+//   id?: string;
+//   name: string;
+//   email: string;
+//   password?: string;
+//   location: {
+//     name: string;
+//     lat: number;
+//     lng: number;
+//   };
+//   workingHours: {
+//     start: string;
+//     end: string;
+//   };
+//   commutePolicy: string;
+//   monthlyBudget: number;
+//   transportOptions: string[];
+//   rewardRules: string;
+//   bestEmployeeCriteria: string;
+//   createdAt: string;
+// }
 
-export interface BulletImprovement {
-  id: string;
-  originalText: string;
-  section: string;
-  issues: string[];
-  suggestedImprovement: string;
-  metricsToConsider: string[];
-  actionVerbUsed?: string;
-  hasMetric: boolean;
-}
+// export interface Employee {
+//   _id?: string;
+//   id?: string;
+//   userId?: string;
+//   companyId: string;
+//   employeeCode: string;
+//   name: string;
+//   email: string;
+//   department?: string;
+//   homeLocation: {
+//     name: string;
+//     lat: number;
+//     lng: number;
+//   };
+//   officeLocation: {
+//     name: string;
+//     lat: number;
+//     lng: number;
+//   };
+//   arrivalTime: string;
+//   departureTime: string;
+//   preferredMode: string;
+//   greenPoints: number;
+//   ecoScore: number;
+//   totalTrips: number;
+//   sustainableTrips: number;
+//   totalCO2Saved: number;
+//   totalMoneySaved: number;
+// }
 
-export interface SectionAnalysisItem {
-  name: string;
-  displayName: string;
-  status: 'present' | 'missing' | 'weak' | 'optional';
-  summary: string;
-  contentSnippet?: string;
-  lineCount?: number;
-  wordCount?: number;
-}
+// export interface Trip {
+//   _id?: string;
+//   id?: string;
+//   userId: string;
+//   companyId?: string;
+//   employeeId?: string;
+//   from: {
+//     name: string;
+//     lat: number;
+//     lng: number;
+//   };
+//   to: {
+//     name: string;
+//     lat: number;
+//     lng: number;
+//   };
+//   fromLocationId?: string;
+//   toLocationId?: string;
+//   mode: string;
+//   cost: number;
+//   distance: number;
+//   distanceKm?: number;
+//   time: number;
+//   durationMinutes?: number;
+//   co2: number;
+//   estimatedCo2Kg?: number;
+//   ecoScore: number;
+//   moneySaved: number;
+//   co2Saved: number;
+//   passengers: number;
+//   carpoolPartner?: string;
+//   status: "planned" | "in_progress" | "completed" | "cancelled";
+//   date: string;
+//   createdAt: string;
+//   timestamp?: string | Date;
+// }
 
-export interface KeywordMatchItem {
-  keyword: string;
-  category: 'technical' | 'tools' | 'soft_skills' | 'methodology' | 'certifications' | 'general';
-  frequencyInResume: number;
-  frequencyInJob?: number;
-  importance: 'high' | 'medium' | 'low';
-}
+// export interface TransportOption {
+//   mode: string;
+//   cost: number;
+//   time: number;
+//   distance: number;
+//   co2: number;
+//   ecoScore: number;
+//   score: number;
+//   rank: number;
+//   recommended: boolean;
+//   reason: string;
+//   moneySaved: number;
+//   co2Saved: number;
+//   occupancy: number;
+//   // UI aliases
+//   estimatedCost?: number;
+//   durationMinutes?: number;
+//   distanceKm?: number;
+//   estimatedCo2Kg?: number;
+// }
 
-export interface CategoryScoreDetail {
-  score: number;
-  maxScore: number;
-  percentage: number;
-  rating: 'Excellent' | 'Strong' | 'Good' | 'Needs Improvement' | 'Poor';
-  whatWasChecked: string[];
-  whatIsGood: string[];
-  whatIsWrong: string[];
-  howToImprove: string[];
-}
+// export interface CarpoolMatch {
+//   _id?: string;
+//   id?: string;
+//   driverId: string;
+//   driverName: string;
+//   riderId?: string;
+//   riderName?: string;
+//   from: {
+//     name: string;
+//     lat: number;
+//     lng: number;
+//   };
+//   to: {
+//     name: string;
+//     lat: number;
+//     lng: number;
+//   };
+//   departureTime: string;
+//   availableSeats: number;
+//   estimatedCost: number;
+//   estimatedCO2PerPerson: number;
+//   estimatedSavings: number;
+//   status: "available" | "matched" | "completed";
+// }
 
-export interface JobMatchBreakdown {
-  overallMatchPercentage: number;
-  technicalSkillsMatch: number;
-  experienceMatch: number;
-  keywordMatch: number;
-  educationMatch: number;
-  jobTitleAlignment: number;
-  topMatchingAreas: string[];
-  biggestGaps: string[];
-}
+// export interface Reward {
+//   _id?: string;
+//   id?: string;
+//   companyId: string;
+//   employeeId: string;
+//   employeeName: string;
+//   points: number;
+//   amount?: number;
+//   reason: string;
+//   status?: "pending" | "awarded" | "redeemed";
+//   date: string;
+// }
 
-export interface ParsedContactInfo {
-  name: string | null;
-  email: string | null;
-  phone: string | null;
-  linkedIn: string | null;
-  github: string | null;
-  portfolio: string | null;
-  location: string | null;
-}
+// export interface AutomationEvent {
+//   _id?: string;
+//   eventId: string;
+//   eventType: string;
+//   companyId?: string;
+//   employeeId?: string;
+//   status: "delivered" | "logged_locally" | "failed";
+//   payload: any;
+//   webhookUrl?: string;
+//   statusCode?: number;
+//   responseMessage?: string;
+//   createdAt: string;
+// }
 
-export interface ParsedResumeData {
-  rawText: string;
-  cleanText: string;
-  lines: string[];
-  wordCount: number;
-  charCount: number;
-  pageCountEstimate: number;
-  contactInfo: ParsedContactInfo;
-  sections: Record<string, string>;
-  detectedSections: SectionAnalysisItem[];
-  hasTables: boolean;
-  hasMultiColumns: boolean;
-  hasUnusualSymbols: boolean;
-  hasImagesOrGraphics: boolean;
-  isScannedOrLowText: boolean;
-}
+// export interface ParkingSpot {
+//   _id?: string;
+//   id?: string;
+//   name: string;
+//   location: string;
+//   totalSpots: number;
+//   evChargingSpots: number;
+//   carpoolReservedSpots: number;
+//   availableSpots: number;
+//   hourlyRate: number;
+//   companyReserved: boolean;
+// }
 
-export interface ATSAnalysisResult {
-  id: string;
-  resumeName: string;
-  analyzedAt: string;
-  analysisMode: 'resume_only' | 'resume_and_job';
-  jobTitle?: string;
-  jobCompany?: string;
-  
-  overallScore: number;
-  overallRating: 'Excellent' | 'Strong' | 'Good' | 'Needs Improvement' | 'Poor';
-  scoreSummary: string;
-  
-  breakdown: {
-    formatting: CategoryScoreDetail;
-    content: CategoryScoreDetail;
-    keywords: CategoryScoreDetail;
-    experience: CategoryScoreDetail;
-    contact: CategoryScoreDetail;
-    atsCompatibility: CategoryScoreDetail;
-  };
-  
-  keywords: {
-    matched: KeywordMatchItem[];
-    missing: KeywordMatchItem[];
-    recommended: KeywordMatchItem[];
-    densityStats: {
-      totalKeywordsDetected: number;
-      uniqueKeywordsCount: number;
-      keywordStuffingRisk: boolean;
-    };
-  };
-  
-  problems: ResumeProblem[];
-  strengths: ResumeStrength[];
-  bulletAnalysis: BulletImprovement[];
-  sectionAnalysis: SectionAnalysisItem[];
-  jobMatch?: JobMatchBreakdown;
-  topImprovements: string[];
-  contactInfo: ParsedContactInfo;
-  wordCount: number;
-  pageCountEstimate: number;
-}
+// export interface CommuteRequest {
+//   from: string;
+//   to: string;
+//   fromLat?: number;
+//   fromLng?: number;
+//   toLat?: number;
+//   toLng?: number;
+//   preferredMode?: string;
+//   preferredTransport?: string;
+//   passengers?: number;
+//   carpoolSeats?: number;
+//   priority?: "balanced" | "save-money" | "eco-friendly" | "save-time" | "cost" | "eco" | "time";
+//   weightProfile?: "balanced" | "cost" | "eco" | "time";
+//   maxBudget?: number;
+//   maxTime?: number;
+// }
 
-export interface UserProfile {
-  id: string;
+// export interface CommuteResult {
+//   options: TransportOption[];
+//   recommended: TransportOption;
+//   carpoolMatch?: CarpoolMatch;
+//   from: { name: string; lat: number; lng: number };
+//   to: { name: string; lat: number; lng: number };
+//   request?: CommuteRequest;
+// }
+
+// export interface DashboardStats {
+//   todayTrips: number;
+//   weekTrips: number;
+//   monthTrips: number;
+//   totalCO2Saved: number;
+//   totalMoneySaved: number;
+//   totalCo2Saved?: number;
+//   avgEcoScore?: number;
+//   totalTrips?: number;
+//   ecoScore: number;
+//   greenPoints: number;
+//   sustainablePercentage: number;
+//   recentTrips: Trip[];
+// }
+
+// export interface CompanyDashboardStats {
+//   totalEmployees: number;
+//   todayTrips: number;
+//   todaySustainableTrips?: number;
+//   co2SavedMonth: number;
+//   moneySavedMonth: number;
+//   carpoolRate: number;
+//   publicTransportUsage: number;
+//   sustainablePercentage: number;
+//   weeklyTrend: { week: string; co2Saved: number; trips: number }[];
+//   monthlyTrend: { month: string; co2Saved: number; moneySaved: number }[];
+//   topEmployees: { name: string; ecoScore: number; greenPoints: number; trips: number; department?: string }[];
+//   modeDistribution: { mode: string; count: number; percentage: number }[];
+// }
+
+
+
+
+// ─── EcoCommute Type Definitions ───
+
+export interface User {
+  _id?: string;
+  id?: string;
   name: string;
   email: string;
-  planTier: 'FREE' | 'PRO';
+  password?: string;
+  role: "user" | "company" | "employee";
+  companyId?: string;
+  employeeId?: string;
+  preferences: {
+    weightProfile: "balanced" | "cost" | "eco" | "time";
+    preferredMode?: string;
+    maxBudget?: number;
+    maxTime?: number;
+  };
+  greenPoints: number;
+  totalTrips: number;
+  totalCO2Saved: number;
+  totalMoneySaved: number;
+  // Newly added personal metrics
+  ecoScore?: number;
+  co2Avoided?: number;
+  moneySaved?: number;
   createdAt: string;
 }
 
-export interface SavedAnalysisSummary {
-  id: string;
-  resumeName: string;
-  jobTitle?: string | null;
-  overallScore: number;
-  overallRating: string;
-  analysisMode: string;
+export interface Company {
+  _id?: string;
+  id?: string;
+  name: string;
+  email: string;
+  password?: string;
+  location: {
+    name: string;
+    lat: number;
+    lng: number;
+  };
+  workingHours: {
+    start: string;
+    end: string;
+  };
+  commutePolicy: string;
+  monthlyBudget: number;
+  transportOptions: string[];
+  rewardRules: string;
+  bestEmployeeCriteria: string;
   createdAt: string;
+}
+
+export interface Employee {
+  _id?: string;
+  id?: string;
+  userId?: string;
+  companyId: string;
+  employeeCode: string;
+  name: string;
+  email: string;
+  department?: string;
+  homeLocation: {
+    name: string;
+    lat: number;
+    lng: number;
+  };
+  officeLocation: {
+    name: string;
+    lat: number;
+    lng: number;
+  };
+  arrivalTime: string;
+  departureTime: string;
+  preferredMode: string;
+  greenPoints: number;
+  ecoScore: number;
+  totalTrips: number;
+  sustainableTrips: number;
+  totalCO2Saved: number;
+  totalMoneySaved: number;
+}
+
+export interface Trip {
+  _id?: string;
+  id?: string;
+  userId: string;
+  companyId?: string;
+  employeeId?: string;
+  from: {
+    name: string;
+    lat: number;
+    lng: number;
+  };
+  to: {
+    name: string;
+    lat: number;
+    lng: number;
+  };
+  fromLocationId?: string;
+  toLocationId?: string;
+  mode: string;
+  cost: number;
+  distance: number;
+  distanceKm?: number;
+  time: number;
+  durationMinutes?: number;
+  co2: number;
+  estimatedCo2Kg?: number;
+  ecoScore: number;
+  moneySaved: number;
+  co2Saved: number;
+  passengers: number;
+  carpoolPartner?: string;
+  status: "planned" | "in_progress" | "completed" | "cancelled";
+  date: string;
+  createdAt: string;
+  timestamp?: string | Date;
+}
+
+export interface TransportOption {
+  mode: string;
+  cost: number;
+  time: number;
+  distance: number;
+  co2: number;
+  ecoScore: number;
+  score: number;
+  rank: number;
+  recommended: boolean;
+  reason: string;
+  moneySaved: number;
+  co2Saved: number;
+  occupancy: number;
+  // UI aliases
+  estimatedCost?: number;
+  durationMinutes?: number;
+  distanceKm?: number;
+  estimatedCo2Kg?: number;
+}
+
+export interface CarpoolMatch {
+  _id?: string;
+  id?: string;
+  driverId: string;
+  driverName: string;
+  riderId?: string;
+  riderName?: string;
+  from: {
+    name: string;
+    lat: number;
+    lng: number;
+  };
+  to: {
+    name: string;
+    lat: number;
+    lng: number;
+  };
+  departureTime: string;
+  availableSeats: number;
+  estimatedCost: number;
+  estimatedCO2PerPerson: number;
+  estimatedSavings: number;
+  status: "available" | "matched" | "completed";
+}
+
+export interface Reward {
+  _id?: string;
+  id?: string;
+  companyId: string;
+  employeeId: string;
+  employeeName: string;
+  points: number;
+  amount?: number;
+  reason: string;
+  status?: "pending" | "awarded" | "redeemed";
+  date: string;
+}
+
+export interface AutomationEvent {
+  _id?: string;
+  eventId: string;
+  eventType: string;
+  companyId?: string;
+  employeeId?: string;
+  status: "delivered" | "logged_locally" | "failed";
+  payload: any;
+  webhookUrl?: string;
+  statusCode?: number;
+  responseMessage?: string;
+  createdAt: string;
+}
+
+export interface ParkingSpot {
+  _id?: string;
+  id?: string;
+  name: string;
+  location: string;
+  totalSpots: number;
+  evChargingSpots: number;
+  carpoolReservedSpots: number;
+  availableSpots: number;
+  hourlyRate: number;
+  companyReserved: boolean;
+}
+
+export interface CommuteRequest {
+  from: string;
+  to: string;
+  fromLat?: number;
+  fromLng?: number;
+  toLat?: number;
+  toLng?: number;
+  preferredMode?: string;
+  preferredTransport?: string;
+  passengers?: number;
+  carpoolSeats?: number;
+  priority?: "balanced" | "save-money" | "eco-friendly" | "save-time" | "cost" | "eco" | "time";
+  weightProfile?: "balanced" | "cost" | "eco" | "time";
+  maxBudget?: number;
+  maxTime?: number;
+}
+
+export interface CommuteResult {
+  options: TransportOption[];
+  recommended: TransportOption;
+  carpoolMatch?: CarpoolMatch;
+  from: { name: string; lat: number; lng: number };
+  to: { name: string; lat: number; lng: number };
+  request?: CommuteRequest;
+}
+
+export interface DashboardStats {
+  todayTrips: number;
+  weekTrips: number;
+  monthTrips: number;
+  totalCO2Saved: number;
+  totalMoneySaved: number;
+  totalCo2Saved?: number;
+  avgEcoScore?: number;
+  totalTrips?: number;
+  ecoScore: number;
+  greenPoints: number;
+  sustainablePercentage: number;
+  recentTrips: Trip[];
+}
+
+export interface CompanyDashboardStats {
+  totalEmployees: number;
+  todayTrips: number;
+  todaySustainableTrips?: number;
+  co2SavedMonth: number;
+  moneySavedMonth: number;
+  carpoolRate: number;
+  publicTransportUsage: number;
+  sustainablePercentage: number;
+  weeklyTrend: { week: string; co2Saved: number; trips: number }[];
+  monthlyTrend: { month: string; co2Saved: number; moneySaved: number }[];
+  topEmployees: { name: string; ecoScore: number; greenPoints: number; trips: number; department?: string }[];
+  modeDistribution: { mode: string; count: number; percentage: number }[];
 }

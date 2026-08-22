@@ -1,121 +1,153 @@
-'use client';
+"use client";
 
-import React, { useState } from 'react';
-import Link from 'next/link';
-import { useRouter } from 'next/navigation';
-import { FileSearch, Lock, Mail, ArrowRight, AlertCircle, Sparkles } from 'lucide-react';
+import { useState } from "react";
+import Link from "next/link";
+import { useRouter } from "next/navigation";
+import { Leaf, Building2, User, Sparkles, ArrowRight, ShieldCheck } from "lucide-react";
+import { Button } from "@/components/ui/button";
+import { Input } from "@/components/ui/input";
+import { Label } from "@/components/ui/label";
+import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from "@/components/ui/card";
 
 export default function LoginPage() {
   const router = useRouter();
-  const [email, setEmail] = useState('');
-  const [password, setPassword] = useState('');
-  const [isLoading, setIsLoading] = useState(false);
-  const [error, setError] = useState<string | null>(null);
+  const [email, setEmail] = useState("demo@ecocommute.in");
+  const [password, setPassword] = useState("demo1234");
+  const [error, setError] = useState("");
+  const [loading, setLoading] = useState(false);
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    setError(null);
-    setIsLoading(true);
+    setLoading(true);
+    setError("");
 
     try {
-      const res = await fetch('/api/auth/login', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
+      const res = await fetch("/api/auth/login", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ email, password }),
       });
 
-      const data = await res.json();
-      if (!res.ok || !data.success) {
-        throw new Error(data.error || 'Invalid credentials');
+      if (res.ok) {
+        const data = await res.json();
+        if (data.user?.role === "company") {
+          router.push("/company/dashboard");
+        } else if (data.user?.role === "employee") {
+          router.push("/employee/dashboard");
+        } else {
+          router.push("/dashboard");
+        }
+      } else {
+        const data = await res.json();
+        setError(data.error || "Invalid login credentials");
       }
-
-      router.push('/history');
-      router.refresh();
-    } catch (err: any) {
-      setError(err.message);
-      setIsLoading(false);
+    } catch (err) {
+      setError("An error occurred during authentication");
+    } finally {
+      setLoading(false);
     }
   };
 
+  const fillCredentials = (userEmail: string, userPass: string) => {
+    setEmail(userEmail);
+    setPassword(userPass);
+  };
+
   return (
-    <div className="min-h-[80vh] flex items-center justify-center py-12 px-4 sm:px-6 lg:px-8 bg-slate-50 dark:bg-slate-950">
-      <div className="w-full max-w-md space-y-6">
-        <div className="text-center space-y-2">
-          <Link href="/" className="inline-flex items-center gap-2 mb-2">
-            <div className="w-10 h-10 rounded-xl bg-indigo-600 flex items-center justify-center text-white shadow-md">
-              <FileSearch className="w-5 h-5" />
-            </div>
-            <span className="text-xl font-bold text-slate-900 dark:text-white">ResumeATS</span>
-          </Link>
-          <h2 className="text-2xl font-bold text-slate-900 dark:text-white tracking-tight">
-            Sign In to Your Account
-          </h2>
-          <p className="text-xs text-slate-500">
-            Access your saved resume analyses and score progression history
-          </p>
-        </div>
+    <div className="min-h-screen flex items-center justify-center bg-slate-50 p-4">
+      <Card className="w-full max-w-md shadow-xl border border-slate-200 rounded-3xl bg-white overflow-hidden">
+        <div className="h-2 bg-gradient-to-r from-emerald-500 to-indigo-600"></div>
+        <CardHeader className="space-y-1 flex flex-col items-center text-center pb-4">
+          <div className="w-12 h-12 bg-emerald-100 text-emerald-700 rounded-2xl flex items-center justify-center mb-2 shadow-xs">
+            <Leaf className="w-6 h-6 fill-current" />
+          </div>
+          <CardTitle className="text-2xl font-black text-slate-900">Sign in to EcoCommute</CardTitle>
+          <CardDescription className="text-xs text-slate-500">
+            Access your B2C commuter profile or B2B corporate portal
+          </CardDescription>
+        </CardHeader>
 
-        <div className="p-8 rounded-3xl bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 shadow-xl shadow-slate-200/40 dark:shadow-none space-y-6">
-          {error && (
-            <div className="p-3.5 rounded-xl bg-rose-50 dark:bg-rose-950/40 border border-rose-200 dark:border-rose-800 text-xs text-rose-700 dark:text-rose-300 flex items-start gap-2">
-              <AlertCircle className="w-4 h-4 text-rose-600 flex-shrink-0 mt-0.5" />
-              <span>{error}</span>
+        <CardContent className="space-y-4">
+          {/* Quick Demo Logins */}
+          <div className="space-y-1.5">
+            <div className="text-[11px] font-bold uppercase text-slate-500 tracking-wider">
+              Quick 1-Click Demo Logins:
             </div>
-          )}
+            <div className="grid grid-cols-3 gap-1.5 text-xs">
+              <button
+                type="button"
+                onClick={() => fillCredentials("demo@ecocommute.in", "demo1234")}
+                className="p-2 rounded-xl border border-emerald-200 bg-emerald-50 hover:bg-emerald-100 text-emerald-900 font-bold transition-all text-center"
+              >
+                B2C User
+              </button>
+              <button
+                type="button"
+                onClick={() => fillCredentials("admin@greentech.in", "company1234")}
+                className="p-2 rounded-xl border border-indigo-200 bg-indigo-50 hover:bg-indigo-100 text-indigo-900 font-bold transition-all text-center"
+              >
+                B2B Admin
+              </button>
+              <button
+                type="button"
+                onClick={() => fillCredentials("rahul@greentech.in", "employee1234")}
+                className="p-2 rounded-xl border border-purple-200 bg-purple-50 hover:bg-purple-100 text-purple-900 font-bold transition-all text-center"
+              >
+                Employee
+              </button>
+            </div>
+          </div>
 
-          <form onSubmit={handleSubmit} className="space-y-4">
-            <div className="space-y-1.5">
-              <label className="text-xs font-bold text-slate-700 dark:text-slate-300">
-                Email Address
-              </label>
-              <div className="relative">
-                <Mail className="w-4 h-4 text-slate-400 absolute left-3.5 top-1/2 -translate-y-1/2" />
-                <input
-                  type="email"
-                  required
-                  value={email}
-                  onChange={(e) => setEmail(e.target.value)}
-                  placeholder="name@example.com"
-                  className="w-full pl-10 pr-4 py-2.5 rounded-xl border border-slate-200 dark:border-slate-800 bg-white dark:bg-slate-900 text-xs sm:text-sm text-slate-900 dark:text-white focus:outline-none focus:ring-2 focus:ring-indigo-500 transition"
-                />
+          <form onSubmit={handleSubmit} className="space-y-4 pt-2">
+            {error && (
+              <div className="p-3 bg-red-50 border border-red-200 text-red-600 text-xs font-semibold rounded-xl">
+                {error}
               </div>
-            </div>
-
+            )}
             <div className="space-y-1.5">
-              <label className="text-xs font-bold text-slate-700 dark:text-slate-300">
-                Password
-              </label>
-              <div className="relative">
-                <Lock className="w-4 h-4 text-slate-400 absolute left-3.5 top-1/2 -translate-y-1/2" />
-                <input
-                  type="password"
-                  required
-                  value={password}
-                  onChange={(e) => setPassword(e.target.value)}
-                  placeholder="••••••••"
-                  className="w-full pl-10 pr-4 py-2.5 rounded-xl border border-slate-200 dark:border-slate-800 bg-white dark:bg-slate-900 text-xs sm:text-sm text-slate-900 dark:text-white focus:outline-none focus:ring-2 focus:ring-indigo-500 transition"
-                />
-              </div>
+              <Label htmlFor="email" className="text-xs font-bold uppercase text-slate-600">Email Address</Label>
+              <Input
+                id="email"
+                type="email"
+                placeholder="demo@ecocommute.in"
+                value={email}
+                onChange={(e) => setEmail(e.target.value)}
+                required
+                className="h-10 rounded-xl"
+              />
+            </div>
+            <div className="space-y-1.5">
+              <Label htmlFor="password" className="text-xs font-bold uppercase text-slate-600">Password</Label>
+              <Input
+                id="password"
+                type="password"
+                placeholder="demo1234"
+                value={password}
+                onChange={(e) => setPassword(e.target.value)}
+                required
+                className="h-10 rounded-xl"
+              />
             </div>
 
-            <button
-              type="submit"
-              disabled={isLoading}
-              className="w-full py-3 rounded-xl text-xs font-bold text-white bg-indigo-600 hover:bg-indigo-700 active:bg-indigo-800 disabled:opacity-50 transition shadow-md flex items-center justify-center gap-2"
-            >
-              {isLoading ? 'Signing In...' : 'Sign In'}
-              <ArrowRight className="w-4 h-4" />
-            </button>
+            <Button type="submit" className="w-full bg-emerald-600 hover:bg-emerald-700 h-11 font-bold rounded-xl" disabled={loading}>
+              {loading ? "Authenticating..." : "Sign In to Account"}
+            </Button>
           </form>
+        </CardContent>
 
-          <div className="pt-2 text-center text-xs text-slate-500">
-            Don’t have an account yet?{' '}
-            <Link href="/register" className="font-bold text-indigo-600 hover:underline">
-              Create free account
+        <CardFooter className="flex flex-col gap-2 border-t border-slate-100 pt-4 bg-slate-50/50">
+          <div className="text-center text-xs text-slate-500">
+            Don't have an account?{" "}
+            <Link href="/register" className="text-emerald-700 hover:underline font-bold">
+              Sign up as Commuter
+            </Link>{" "}
+            or{" "}
+            <Link href="/company/register" className="text-indigo-700 hover:underline font-bold">
+              Register Company
             </Link>
           </div>
-        </div>
-      </div>
+        </CardFooter>
+      </Card>
     </div>
   );
 }

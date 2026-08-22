@@ -1,244 +1,244 @@
-'use client';
+"use client";
 
-import React, { useState, useEffect } from 'react';
-import Link from 'next/link';
-import { usePathname, useRouter } from 'next/navigation';
-import { FileSearch, Sparkles, User, LogOut, History, Menu, X, ArrowRight, ShieldCheck, QrCode } from 'lucide-react';
-import { UpiPaymentModal } from '@/components/payment/UpiPaymentModal';
+import * as React from "react";
+import Link from "next/link";
+import { usePathname, useRouter } from "next/navigation";
+import {
+  Leaf,
+  Menu,
+  X,
+  User,
+  Building2,
+  Navigation,
+  BarChart3,
+  Award,
+  Cpu,
+  History,
+  Zap,
+  ChevronDown,
+  Sparkles,
+} from "lucide-react";
+import { Button } from "@/components/ui/button";
+import { cn } from "@/lib/utils";
 
-export function Navbar() {
+interface NavbarProps {
+  role?: "user" | "company" | "employee";
+}
+
+export function Navbar({ role }: NavbarProps) {
   const pathname = usePathname();
   const router = useRouter();
-  const [isScrolled, setIsScrolled] = useState(false);
-  const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
-  const [currentUser, setCurrentUser] = useState<{ name: string; email: string; planTier: string } | null>(null);
-  const [isUpiModalOpen, setIsUpiModalOpen] = useState(false);
+  const [isMenuOpen, setIsMenuOpen] = React.useState(false);
+  const [activeRole, setActiveRole] = React.useState<"user" | "company" | "employee">("user");
 
-  useEffect(() => {
-    const handleScroll = () => {
-      setIsScrolled(window.scrollY > 10);
-    };
-    window.addEventListener('scroll', handleScroll);
-    return () => window.removeEventListener('scroll', handleScroll);
-  }, []);
-
-  useEffect(() => {
-    // Fetch auth status
-    fetch('/api/auth/me')
-      .then((res) => res.json())
-      .then((data) => {
-        if (data.user) setCurrentUser(data.user);
-        else setCurrentUser(null);
-      })
-      .catch(() => setCurrentUser(null));
-  }, [pathname]);
-
-  const handleLogout = async () => {
-    try {
-      await fetch('/api/auth/logout', { method: 'POST' });
-      setCurrentUser(null);
-      router.push('/');
-      router.refresh();
-    } catch (err) {
-      console.error(err);
+  React.useEffect(() => {
+    if (role) {
+      setActiveRole(role);
+    } else if (pathname.startsWith("/company")) {
+      setActiveRole("company");
+    } else if (pathname.startsWith("/employee")) {
+      setActiveRole("employee");
+    } else {
+      setActiveRole("user");
     }
-  };
+  }, [pathname, role]);
 
-  const navLinks = [
-    { label: 'Analyze Resume', href: '/analyze', badge: 'Free' },
-    { label: 'How It Works', href: '/#how-it-works' },
-    { label: 'ATS Breakdown', href: '/#score-breakdown' },
-    { label: 'Pricing (From ₹19)', href: '/pricing' },
-    { label: 'Guides', href: '/guides/what-is-an-ats' },
+  const b2cLinks = [
+    { href: "/dashboard", label: "Dashboard", icon: BarChart3 },
+    { href: "/plan", label: "Plan Commute", icon: Navigation },
+    { href: "/history", label: "Trip History", icon: History },
+    { href: "/impact", label: "Impact Analytics", icon: Leaf },
+    { href: "/profile", label: "Profile & Points", icon: User },
   ];
 
+  const b2bLinks = [
+    { href: "/company/dashboard", label: "Corporate Overview", icon: Building2 },
+    { href: "/company/employees", label: "Employees", icon: User },
+    { href: "/company/analytics", label: "ESG Analytics", icon: BarChart3 },
+    { href: "/company/rewards", label: "Rewards & Budget", icon: Award },
+    { href: "/company/integrations", label: "viaSocket Automation", icon: Cpu },
+  ];
+
+  const employeeLinks = [
+    { href: "/employee/dashboard", label: "Today's Commute", icon: Navigation },
+    { href: "/dashboard", label: "B2C Personal View", icon: BarChart3 },
+    { href: "/company/dashboard", label: "Company Portal", icon: Building2 },
+  ];
+
+  const currentLinks =
+    activeRole === "company"
+      ? b2bLinks
+      : activeRole === "employee"
+      ? employeeLinks
+      : b2cLinks;
+
   return (
-    <header
-      className={`sticky top-0 z-40 w-full transition-all duration-200 ${
-        isScrolled
-          ? 'bg-white/90 dark:bg-slate-900/90 backdrop-blur-md shadow-sm border-b border-slate-200 dark:border-slate-800'
-          : 'bg-white dark:bg-slate-900 border-b border-slate-100 dark:border-slate-800'
-      }`}
-    >
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-        <div className="flex items-center justify-between h-16">
-          {/* Logo */}
-          <Link href="/" className="flex items-center gap-2.5 group">
-            <div className="w-10 h-10 rounded-xl bg-gradient-to-tr from-indigo-600 to-indigo-500 flex items-center justify-center text-white shadow-md shadow-indigo-500/20 group-hover:scale-105 transition-transform">
-              <FileSearch className="w-5 h-5" />
+    <header className="sticky top-0 z-50 w-full border-b border-slate-200 bg-white/95 backdrop-blur shadow-xs">
+      <div className="container mx-auto flex h-16 items-center justify-between px-4 md:px-8">
+        {/* Brand Logo */}
+        <div className="flex items-center gap-6">
+          <Link href="/" className="flex items-center space-x-2.5">
+            <div className="w-9 h-9 rounded-xl bg-emerald-600 flex items-center justify-center text-white shadow-sm">
+              <Leaf className="h-5 w-5 fill-current" />
             </div>
             <div className="flex flex-col">
-              <span className="text-lg font-bold tracking-tight text-slate-900 dark:text-white flex items-center gap-1.5">
-                ResumeATS
-                <span className="text-[10px] uppercase tracking-wider font-semibold px-1.5 py-0.5 rounded bg-indigo-50 dark:bg-indigo-950/60 text-indigo-600 dark:text-indigo-400 border border-indigo-200/60 dark:border-indigo-800">
-                  Pro
-                </span>
+              <span className="text-lg font-black tracking-tight text-slate-900 leading-none">
+                Eco<span className="text-emerald-600">Commute</span>
               </span>
-              <span className="text-[10px] text-slate-500 font-medium -mt-1">
-                ATS Compatibility Engine
+              <span className="text-[10px] font-semibold text-slate-400 tracking-wider uppercase">
+                Sustainable Transit Platform
               </span>
             </div>
           </Link>
 
-          {/* Desktop Nav Links */}
-          <nav className="hidden md:flex items-center gap-6">
-            {navLinks.map((link) => (
+          {/* Mode Switcher Pill */}
+          <div className="hidden lg:flex items-center bg-slate-100 p-1 rounded-xl border border-slate-200 text-xs font-semibold">
+            <Link
+              href="/dashboard"
+              className={cn(
+                "px-3 py-1 rounded-lg transition-all",
+                activeRole === "user"
+                  ? "bg-white text-emerald-800 shadow-xs font-bold"
+                  : "text-slate-600 hover:text-slate-900"
+              )}
+            >
+              B2C Individual
+            </Link>
+            <Link
+              href="/company/dashboard"
+              className={cn(
+                "px-3 py-1 rounded-lg transition-all",
+                activeRole === "company"
+                  ? "bg-white text-emerald-800 shadow-xs font-bold"
+                  : "text-slate-600 hover:text-slate-900"
+              )}
+            >
+              B2B Corporate
+            </Link>
+            <Link
+              href="/employee/dashboard"
+              className={cn(
+                "px-3 py-1 rounded-lg transition-all",
+                activeRole === "employee"
+                  ? "bg-white text-emerald-800 shadow-xs font-bold"
+                  : "text-slate-600 hover:text-slate-900"
+              )}
+            >
+              Employee Daily
+            </Link>
+          </div>
+        </div>
+
+        {/* Desktop Navigation */}
+        <nav className="hidden md:flex items-center space-x-1 text-sm font-medium">
+          {currentLinks.map((link) => {
+            const Icon = link.icon;
+            const isActive = pathname === link.href;
+            return (
               <Link
                 key={link.href}
                 href={link.href}
-                className={`text-sm font-medium transition-colors hover:text-indigo-600 dark:hover:text-indigo-400 flex items-center gap-1.5 ${
-                  pathname === link.href
-                    ? 'text-indigo-600 dark:text-indigo-400 font-semibold'
-                    : 'text-slate-600 dark:text-slate-300'
-                }`}
-              >
-                {link.label}
-                {link.badge && (
-                  <span className="text-[10px] font-semibold px-1.5 py-0.2 rounded-full bg-emerald-100 text-emerald-800 dark:bg-emerald-950 dark:text-emerald-300">
-                    {link.badge}
-                  </span>
+                className={cn(
+                  "flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-xs font-semibold transition-colors",
+                  isActive
+                    ? "bg-emerald-50 text-emerald-800 font-bold"
+                    : "text-slate-600 hover:bg-slate-100 hover:text-slate-900"
                 )}
+              >
+                <Icon className="w-3.5 h-3.5" />
+                {link.label}
               </Link>
-            ))}
-          </nav>
+            );
+          })}
+        </nav>
 
-          {/* Auth & CTAs */}
-          <div className="hidden md:flex items-center gap-3">
-            <button
-              onClick={() => setIsUpiModalOpen(true)}
-              className="inline-flex items-center gap-1.5 text-xs font-bold text-indigo-600 dark:text-indigo-400 bg-indigo-50 dark:bg-indigo-950/60 hover:bg-indigo-100 px-3 py-2 rounded-lg border border-indigo-200/60 dark:border-indigo-800 transition"
-            >
-              <QrCode className="w-3.5 h-3.5" />
-              Upgrade (₹19+)
-            </button>
-
-            {currentUser ? (
-              <div className="flex items-center gap-3">
-                <Link
-                  href="/history"
-                  className="flex items-center gap-1.5 text-xs font-medium text-slate-600 dark:text-slate-300 hover:text-indigo-600 px-3 py-2 rounded-lg hover:bg-slate-100 dark:hover:bg-slate-800 transition"
-                >
-                  <History className="w-4 h-4" />
-                  My Analyses
-                </Link>
-                <div className="h-4 w-px bg-slate-200 dark:bg-slate-700" />
-                <span className="text-xs font-medium text-slate-700 dark:text-slate-300 flex items-center gap-1">
-                  <User className="w-3.5 h-3.5 text-indigo-600" />
-                  {currentUser.name}
-                </span>
-                <button
-                  onClick={handleLogout}
-                  title="Log out"
-                  className="p-1.5 text-slate-400 hover:text-rose-600 rounded-lg hover:bg-rose-50 dark:hover:bg-rose-950 transition"
-                >
-                  <LogOut className="w-4 h-4" />
-                </button>
-              </div>
-            ) : (
-              <div className="flex items-center gap-2">
-                <Link
-                  href="/login"
-                  className="text-sm font-medium text-slate-700 dark:text-slate-200 hover:text-indigo-600 px-3 py-2 rounded-lg transition"
-                >
-                  Sign In
-                </Link>
-                <Link
-                  href="/analyze"
-                  className="inline-flex items-center gap-1.5 text-sm font-medium text-white bg-indigo-600 hover:bg-indigo-700 active:bg-indigo-800 px-4 py-2 rounded-lg shadow-sm shadow-indigo-600/20 transition-all hover:gap-2"
-                >
-                  Analyze Free
-                  <ArrowRight className="w-4 h-4" />
-                </Link>
-              </div>
-            )}
-          </div>
-
-          {/* Mobile menu button */}
-          <div className="flex md:hidden items-center gap-2">
-            <button
-              onClick={() => setIsUpiModalOpen(true)}
-              className="text-xs font-bold text-indigo-600 bg-indigo-50 px-2.5 py-1.5 rounded-lg border border-indigo-200"
-            >
-              ₹19 Pro
-            </button>
-            <Link
-              href="/analyze"
-              className="text-xs font-medium text-white bg-indigo-600 px-3 py-1.5 rounded-lg"
-            >
-              Analyze
+        {/* Quick CTA Actions */}
+        <div className="hidden md:flex items-center space-x-3">
+          {activeRole === "company" ? (
+            <Link href="/company/integrations">
+              <Button size="sm" variant="outline" className="text-xs h-9 rounded-xl border-slate-300">
+                <Cpu className="w-3.5 h-3.5 mr-1.5 text-indigo-600" /> viaSocket Integrations
+              </Button>
             </Link>
-            <button
-              onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
-              className="p-2 text-slate-600 dark:text-slate-300 hover:bg-slate-100 dark:hover:bg-slate-800 rounded-lg"
-            >
-              {mobileMenuOpen ? <X className="w-5 h-5" /> : <Menu className="w-5 h-5" />}
-            </button>
-          </div>
+          ) : (
+            <Link href="/plan">
+              <Button size="sm" className="text-xs h-9 bg-emerald-600 hover:bg-emerald-700 rounded-xl font-bold">
+                <Navigation className="w-3.5 h-3.5 mr-1.5" /> Find Best Option
+              </Button>
+            </Link>
+          )}
         </div>
+
+        {/* Mobile menu button */}
+        <button
+          className="md:hidden p-2 rounded-lg text-slate-600 hover:bg-slate-100"
+          onClick={() => setIsMenuOpen(!isMenuOpen)}
+        >
+          {isMenuOpen ? <X className="h-6 w-6" /> : <Menu className="h-6 w-6" />}
+        </button>
       </div>
 
-      {/* Mobile menu dropdown */}
-      {mobileMenuOpen && (
-        <div className="md:hidden border-t border-slate-200 dark:border-slate-800 bg-white dark:bg-slate-900 px-4 pt-2 pb-6 space-y-3 shadow-lg">
-          <div className="flex flex-col space-y-2">
-            {navLinks.map((link) => (
-              <Link
-                key={link.href}
-                href={link.href}
-                onClick={() => setMobileMenuOpen(false)}
-                className="text-sm font-medium text-slate-700 dark:text-slate-200 hover:text-indigo-600 px-2 py-1.5 rounded-md hover:bg-slate-50 dark:hover:bg-slate-800"
-              >
-                {link.label}
-              </Link>
-            ))}
-            {currentUser ? (
-              <>
-                <Link
-                  href="/history"
-                  onClick={() => setMobileMenuOpen(false)}
-                  className="text-sm font-medium text-indigo-600 px-2 py-1.5 flex items-center gap-2"
-                >
-                  <History className="w-4 h-4" />
-                  My Saved Analyses
-                </Link>
-                <button
-                  onClick={() => {
-                    handleLogout();
-                    setMobileMenuOpen(false);
-                  }}
-                  className="text-sm font-medium text-rose-600 px-2 py-1.5 flex items-center gap-2 text-left"
-                >
-                  <LogOut className="w-4 h-4" />
-                  Log Out ({currentUser.name})
-                </button>
-              </>
-            ) : (
-              <div className="pt-2 flex flex-col gap-2">
-                <Link
-                  href="/login"
-                  onClick={() => setMobileMenuOpen(false)}
-                  className="text-center text-sm font-medium text-slate-700 dark:text-slate-200 border border-slate-300 dark:border-slate-700 py-2 rounded-lg"
-                >
-                  Sign In
-                </Link>
-                <Link
-                  href="/register"
-                  onClick={() => setMobileMenuOpen(false)}
-                  className="text-center text-sm font-medium text-white bg-indigo-600 py-2 rounded-lg"
-                >
-                  Create Free Account
-                </Link>
-              </div>
-            )}
+      {/* Mobile Navigation Drawer */}
+      {isMenuOpen && (
+        <div className="md:hidden border-b border-slate-200 bg-white px-4 py-4 space-y-4">
+          <div className="flex bg-slate-100 p-1 rounded-xl text-xs font-semibold">
+            <Link
+              href="/dashboard"
+              onClick={() => setIsMenuOpen(false)}
+              className={cn(
+                "flex-1 py-1.5 text-center rounded-lg",
+                activeRole === "user" ? "bg-white text-emerald-800 shadow-xs font-bold" : "text-slate-600"
+              )}
+            >
+              B2C Commuter
+            </Link>
+            <Link
+              href="/company/dashboard"
+              onClick={() => setIsMenuOpen(false)}
+              className={cn(
+                "flex-1 py-1.5 text-center rounded-lg",
+                activeRole === "company" ? "bg-white text-emerald-800 shadow-xs font-bold" : "text-slate-600"
+              )}
+            >
+              B2B Corporate
+            </Link>
+            <Link
+              href="/employee/dashboard"
+              onClick={() => setIsMenuOpen(false)}
+              className={cn(
+                "flex-1 py-1.5 text-center rounded-lg",
+                activeRole === "employee" ? "bg-white text-emerald-800 shadow-xs font-bold" : "text-slate-600"
+              )}
+            >
+              Employee Daily
+            </Link>
           </div>
+
+          <nav className="flex flex-col space-y-1">
+            {currentLinks.map((link) => {
+              const Icon = link.icon;
+              return (
+                <Link
+                  key={link.href}
+                  href={link.href}
+                  className={cn(
+                    "flex items-center gap-2.5 px-3 py-2 rounded-lg text-sm font-medium",
+                    pathname === link.href
+                      ? "bg-emerald-50 text-emerald-800 font-bold"
+                      : "text-slate-600 hover:bg-slate-50"
+                  )}
+                  onClick={() => setIsMenuOpen(false)}
+                >
+                  <Icon className="w-4 h-4" />
+                  {link.label}
+                </Link>
+              );
+            })}
+          </nav>
         </div>
       )}
-
-      {/* Global UPI Payment Modal */}
-      <UpiPaymentModal
-        isOpen={isUpiModalOpen}
-        onClose={() => setIsUpiModalOpen(false)}
-      />
     </header>
   );
 }
+
+export default Navbar;

@@ -1,214 +1,168 @@
-'use client';
+"use client";
 
-import React, { useEffect, useState } from 'react';
-import Link from 'next/link';
-import { History, FileText, Calendar, Trash2, ArrowRight, Sparkles, ShieldCheck, Plus } from 'lucide-react';
-import { formatDate, getScoreColor } from '@/lib/utils';
+import { useEffect, useState } from "react";
+import { Leaf, MapPin, Map, Calendar, Coins, ArrowRight, ShieldCheck, Bus, Car, Bike, Footprints, Users } from "lucide-react";
+import Navbar from "@/components/layout/navbar";
+import { Card, CardContent } from "@/components/ui/card";
+import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
+import { Button } from "@/components/ui/button";
+import Link from "next/link";
+import { formatCurrency, formatCO2, formatDistance, formatDuration, formatDate, getTransportLabel, getEcoLabel } from "@/lib/utils";
 
-interface SavedAnalysisItem {
-  id: string;
-  resumeName: string;
-  jobTitle: string | null;
-  overallScore: number;
-  formattingScore: number;
-  contentScore: number;
-  keywordScore: number;
-  experienceScore: number;
-  contactScore: number;
-  atsCompatibilityScore: number;
-  jobMatchScore: number | null;
-  createdAt: string;
+function ModeIcon({ mode }: { mode: string }) {
+  switch (mode?.toLowerCase()) {
+    case "bus":
+      return <Bus className="w-5 h-5 text-blue-600" />;
+    case "cab":
+      return <Car className="w-5 h-5 text-amber-600" />;
+    case "personal":
+      return <Car className="w-5 h-5 text-slate-600" />;
+    case "carpool":
+      return <Users className="w-5 h-5 text-purple-600" />;
+    case "cycling":
+      return <Bike className="w-5 h-5 text-emerald-600" />;
+    case "walking":
+      return <Footprints className="w-5 h-5 text-teal-600" />;
+    default:
+      return <MapPin className="w-5 h-5 text-slate-600" />;
+  }
 }
 
 export default function HistoryPage() {
-  const [analyses, setAnalyses] = useState<SavedAnalysisItem[]>([]);
-  const [isLoading, setIsLoading] = useState(true);
-  const [isUnauthorized, setIsUnauthorized] = useState(false);
-
-  const fetchHistory = () => {
-    setIsLoading(true);
-    fetch('/api/analyses')
-      .then(async (res) => {
-        if (res.status === 401) {
-          setIsUnauthorized(true);
-          return [];
-        }
-        const data = await res.json();
-        return data.analyses || [];
-      })
-      .then((list) => {
-        setAnalyses(list);
-        setIsLoading(false);
-      })
-      .catch(() => {
-        setIsLoading(false);
-      });
-  };
+  const [trips, setTrips] = useState<any[]>([]);
+  const [loading, setLoading] = useState(true);
+  const [filter, setFilter] = useState("all");
 
   useEffect(() => {
-    fetchHistory();
-  }, []);
-
-  const handleDelete = async (id: string) => {
-    if (!confirm('Are you sure you want to delete this saved analysis?')) return;
-    try {
-      await fetch(`/api/analyses/${id}`, { method: 'DELETE' });
-      setAnalyses((prev) => prev.filter((item) => item.id !== id));
-    } catch (e) {
-      console.error(e);
+    async function loadTrips() {
+      setLoading(true);
+      try {
+        let url = "/api/trips";
+        if (filter !== "all") url += `?period=${filter}`;
+        const res = await fetch(url);
+        if (res.ok) {
+          const data = await res.json();
+          setTrips(data.trips || []);
+        }
+      } catch (err) {
+        console.error(err);
+      } finally {
+        setLoading(false);
+      }
     }
-  };
-
-  if (isUnauthorized) {
-    return (
-      <div className="min-h-[75vh] flex flex-col items-center justify-center p-6 text-center space-y-4 max-w-md mx-auto">
-        <div className="w-12 h-12 rounded-2xl bg-indigo-50 dark:bg-indigo-950 text-indigo-600 flex items-center justify-center">
-          <History className="w-6 h-6" />
-        </div>
-        <h2 className="text-xl font-bold text-slate-900 dark:text-white">
-          Sign In to View Your Analysis History
-        </h2>
-        <p className="text-xs sm:text-sm text-slate-500">
-          Create a free account or log in to track your ATS scores over time, save past reports, and monitor resume improvements.
-        </p>
-        <div className="flex items-center gap-3 pt-2">
-          <Link
-            href="/login"
-            className="text-xs font-bold text-white bg-indigo-600 hover:bg-indigo-700 px-5 py-2.5 rounded-xl transition"
-          >
-            Sign In
-          </Link>
-          <Link
-            href="/register"
-            className="text-xs font-bold text-slate-700 dark:text-slate-200 bg-slate-100 dark:bg-slate-800 px-5 py-2.5 rounded-xl hover:bg-slate-200 transition"
-          >
-            Create Account
-          </Link>
-        </div>
-      </div>
-    );
-  }
+    loadTrips();
+  }, [filter]);
 
   return (
-    <div className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 py-10 space-y-8">
-      {/* Header */}
-      <div className="flex flex-col sm:flex-row sm:items-center justify-between pb-6 border-b border-slate-200 dark:border-slate-800 gap-4">
-        <div>
-          <h1 className="text-2xl sm:text-3xl font-extrabold text-slate-900 dark:text-white flex items-center gap-2.5">
-            <History className="w-7 h-7 text-indigo-600" />
-            My Saved Analyses
-          </h1>
-          <p className="text-xs sm:text-sm text-slate-500 mt-1">
-            Track your resume scores, job matches, and optimization progress over time
-          </p>
-        </div>
+    <div className="min-h-screen bg-slate-50 flex flex-col">
+      <Navbar />
+      <main className="flex-1 container mx-auto px-4 py-8">
+        <div className="max-w-4xl mx-auto space-y-6">
+          <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
+            <div>
+              <h1 className="text-3xl font-bold tracking-tight text-slate-900">Trip History</h1>
+              <p className="text-slate-500 mt-1">Review your completed commutes and ecological impact.</p>
+            </div>
+            <Link href="/plan">
+              <Button className="bg-emerald-600 hover:bg-emerald-700">
+                Plan New Commute <ArrowRight className="w-4 h-4 ml-2" />
+              </Button>
+            </Link>
+          </div>
 
-        <Link
-          href="/analyze"
-          className="inline-flex items-center gap-2 text-xs font-bold text-white bg-indigo-600 hover:bg-indigo-700 px-4 py-2.5 rounded-xl shadow-md transition"
-        >
-          <Plus className="w-4 h-4" />
-          New Resume Analysis
-        </Link>
-      </div>
+          <Tabs defaultValue="all" onValueChange={setFilter}>
+            <TabsList className="mb-4 bg-white border border-slate-200">
+              <TabsTrigger value="all">All Time</TabsTrigger>
+              <TabsTrigger value="today">Today</TabsTrigger>
+              <TabsTrigger value="week">This Week</TabsTrigger>
+              <TabsTrigger value="month">This Month</TabsTrigger>
+            </TabsList>
 
-      {/* List */}
-      {isLoading ? (
-        <div className="py-20 text-center text-slate-500 text-sm">
-          Loading your saved analyses...
-        </div>
-      ) : analyses.length === 0 ? (
-        <div className="p-12 rounded-3xl bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 text-center space-y-4 max-w-lg mx-auto">
-          <FileText className="w-10 h-10 text-slate-400 mx-auto" />
-          <h3 className="text-lg font-bold text-slate-900 dark:text-white">
-            No Saved Analyses Yet
-          </h3>
-          <p className="text-xs text-slate-500">
-            Upload your resume now to calculate your ATS score and save it to your account history.
-          </p>
-          <Link
-            href="/analyze"
-            className="inline-flex items-center gap-2 text-xs font-bold text-white bg-indigo-600 hover:bg-indigo-700 px-5 py-2.5 rounded-xl transition"
-          >
-            Start First Analysis
-            <ArrowRight className="w-4 h-4" />
-          </Link>
-        </div>
-      ) : (
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-          {analyses.map((item) => {
-            const colors = getScoreColor(item.overallScore);
-
-            return (
-              <div
-                key={item.id}
-                className="p-6 rounded-3xl bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 shadow-sm hover:shadow-md transition space-y-4 flex flex-col justify-between"
-              >
-                <div className="space-y-3">
-                  <div className="flex items-start justify-between gap-3">
-                    <div className="min-w-0">
-                      <h3 className="text-base font-bold text-slate-900 dark:text-white truncate">
-                        {item.resumeName}
-                      </h3>
-                      <p className="text-xs text-slate-500 truncate mt-0.5">
-                        {item.jobTitle || 'General ATS Scan'}
-                      </p>
-                    </div>
-
-                    {/* Overall Score Badge */}
-                    <div className={`px-3 py-1 rounded-xl text-center flex-shrink-0 ${colors.bg} border ${colors.border}`}>
-                      <span className={`text-lg font-extrabold ${colors.text}`}>
-                        {item.overallScore}
-                      </span>
-                      <span className="text-[10px] text-slate-400 block -mt-1 font-bold">/ 100</span>
-                    </div>
-                  </div>
-
-                  {/* Sub-scores mini grid */}
-                  <div className="grid grid-cols-3 gap-2 text-[11px] pt-1 border-t border-slate-100 dark:border-slate-800/80">
-                    <div>
-                      <span className="text-slate-400 block">Formatting</span>
-                      <span className="font-semibold text-slate-700 dark:text-slate-300">{item.formattingScore}/20</span>
-                    </div>
-                    <div>
-                      <span className="text-slate-400 block">Keywords</span>
-                      <span className="font-semibold text-slate-700 dark:text-slate-300">{item.keywordScore}/25</span>
-                    </div>
-                    <div>
-                      <span className="text-slate-400 block">Experience</span>
-                      <span className="font-semibold text-slate-700 dark:text-slate-300">{item.experienceScore}/15</span>
-                    </div>
-                  </div>
+            <TabsContent value={filter} className="space-y-4 outline-none">
+              {loading ? (
+                <div className="py-12 text-center text-slate-500">
+                  <div className="animate-spin w-8 h-8 border-2 border-emerald-600 border-t-transparent rounded-full mx-auto mb-2"></div>
+                  Loading trips...
                 </div>
-
-                <div className="pt-3 border-t border-slate-100 dark:border-slate-800 flex items-center justify-between text-xs">
-                  <span className="text-slate-400 flex items-center gap-1 text-[11px]">
-                    <Calendar className="w-3 h-3" />
-                    {formatDate(item.createdAt)}
-                  </span>
-
-                  <div className="flex items-center gap-2">
-                    <button
-                      onClick={() => handleDelete(item.id)}
-                      className="p-1.5 text-slate-400 hover:text-rose-600 rounded-lg hover:bg-rose-50 dark:hover:bg-rose-950 transition"
-                      title="Delete saved report"
-                    >
-                      <Trash2 className="w-4 h-4" />
-                    </button>
-                    <Link
-                      href={`/report/${item.id}`}
-                      className="inline-flex items-center gap-1 font-bold text-indigo-600 hover:text-indigo-700 hover:underline"
-                    >
-                      View Report
-                      <ArrowRight className="w-3.5 h-3.5" />
+              ) : trips.length === 0 ? (
+                <Card className="border-dashed border-2">
+                  <CardContent className="flex flex-col items-center justify-center py-16 text-center">
+                    <div className="w-16 h-16 bg-slate-100 rounded-full flex items-center justify-center mb-4">
+                      <Map className="w-8 h-8 text-slate-400" />
+                    </div>
+                    <h3 className="text-lg font-bold text-slate-900">No trips recorded yet</h3>
+                    <p className="text-slate-500 mt-1 max-w-sm">
+                      Plan a sustainable commute in Indore to start logging trips and earning Green Points!
+                    </p>
+                    <Link href="/plan" className="mt-6">
+                      <Button className="bg-emerald-600 hover:bg-emerald-700">Plan a Trip</Button>
                     </Link>
-                  </div>
-                </div>
-              </div>
-            );
-          })}
+                  </CardContent>
+                </Card>
+              ) : (
+                trips.map((trip: any, idx: number) => {
+                  const ecoInfo = getEcoLabel(trip.ecoScore || 80);
+                  const fromLoc = trip.fromLocationId || trip.from?.name || "Vijay Nagar";
+                  const toLoc = trip.toLocationId || trip.to?.name || "Rajwada";
+                  const cost = trip.cost ?? trip.estimatedCost ?? 0;
+                  const dist = trip.distance ?? trip.distanceKm ?? 0;
+                  const dur = trip.time ?? trip.durationMinutes ?? 0;
+                  const co2Saved = trip.co2Saved || 0;
+                  const moneySaved = trip.moneySaved || 0;
+
+                  return (
+                    <Card key={idx} className="overflow-hidden border border-slate-200 hover:border-emerald-300 hover:shadow-md transition-all">
+                      <CardContent className="p-0">
+                        <div className="flex flex-col md:flex-row">
+                          <div className="p-4 md:p-6 flex-1 flex items-start gap-4">
+                            <div className="w-12 h-12 bg-slate-100 rounded-xl flex items-center justify-center shrink-0 border border-slate-200">
+                              <ModeIcon mode={trip.mode} />
+                            </div>
+                            <div className="flex-1 min-w-0">
+                              <div className="flex items-center gap-2 mb-1 flex-wrap">
+                                <span className="font-bold text-slate-900 text-base">{fromLoc}</span>
+                                <ArrowRight className="w-4 h-4 text-slate-400 shrink-0" />
+                                <span className="font-bold text-slate-900 text-base">{toLoc}</span>
+                              </div>
+                              <div className="text-xs text-slate-500 flex items-center gap-3 flex-wrap mt-1">
+                                <span className="flex items-center gap-1">
+                                  <Calendar className="w-3.5 h-3.5" /> {formatDate(trip.date || trip.createdAt)}
+                                </span>
+                                <span className="font-medium text-slate-700">• {getTransportLabel(trip.mode)}</span>
+                                <span>• {formatDistance(dist)}</span>
+                                <span>• {formatDuration(dur)}</span>
+                              </div>
+                            </div>
+                          </div>
+                          
+                          <div className="bg-slate-50 p-4 md:p-6 flex md:flex-col items-center md:items-end justify-between border-t md:border-t-0 md:border-l border-slate-200 min-w-[210px]">
+                            <div className="text-xl font-bold text-slate-900">{formatCurrency(cost)}</div>
+                            <div className="flex items-center gap-3 mt-1 text-xs">
+                              {co2Saved > 0 && (
+                                <div className="flex items-center gap-1 text-emerald-600 font-semibold">
+                                  <Leaf className="w-3.5 h-3.5" /> -{formatCO2(co2Saved)}
+                                </div>
+                              )}
+                              {moneySaved > 0 && (
+                                <div className="flex items-center gap-1 text-amber-600 font-semibold">
+                                  <Coins className="w-3.5 h-3.5" /> +{formatCurrency(moneySaved)}
+                                </div>
+                              )}
+                            </div>
+                            <div className={`text-xs font-semibold px-2.5 py-0.5 rounded-full border mt-2 ${ecoInfo.badgeColor}`}>
+                              Eco Score: {trip.ecoScore || 80}/100
+                            </div>
+                          </div>
+                        </div>
+                      </CardContent>
+                    </Card>
+                  );
+                })
+              )}
+            </TabsContent>
+          </Tabs>
         </div>
-      )}
+      </main>
     </div>
   );
 }
