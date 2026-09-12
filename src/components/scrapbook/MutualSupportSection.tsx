@@ -1,8 +1,7 @@
 "use client";
 
 import React from "react";
-import { Trophy, PenTool, TrendingUp, Sparkles, HeartHandshake } from "lucide-react";
-import { WashiTape } from "./WashiTape";
+import { Trophy, PenTool, TrendingUp } from "lucide-react";
 import { PostageStamp } from "./PostageStamp";
 
 export const MutualSupportSection: React.FC = () => {
@@ -20,19 +19,19 @@ export const MutualSupportSection: React.FC = () => {
     {
       icon: TrendingUp,
       title: "Personal Growth",
-      desc: "Reminding me to stay ambitious, keep building skills, and never stop growing.",
+      desc: "Reminding me to stay ambitious, keep building skills, aur hamesha grow karte rehne ko bolna.",
     },
   ];
 
   return (
     <section
       id="mutual-support"
-      className="py-20 sm:py-24 px-4 sm:px-6 relative max-w-4xl mx-auto"
+      className="py-24 sm:py-32 px-4 sm:px-6 relative max-w-4xl mx-auto"
     >
       {/* Chapter Marker */}
-      <div className="flex items-center gap-3 mb-8">
+      <div className="flex items-center gap-3 mb-10">
         <span className="font-mono text-xs font-bold text-[#8C4A2F] bg-[#FBECE7] px-2.5 py-1 rounded border border-[#F3D5CA]">
-          CHAPTER 13
+          CHAPTER 16
         </span>
         <div className="h-px bg-[#EADBCE] flex-1" />
         <PostageStamp date="MUTUAL" label="TWO-WAY" color="navy" />
@@ -40,18 +39,18 @@ export const MutualSupportSection: React.FC = () => {
 
       <div className="space-y-8">
         <div className="space-y-3 text-left">
-          <p className="font-handwriting text-xl sm:text-2xl text-[#8C4A2F]">
+          <p className="font-handwriting text-2xl sm:text-3xl text-[#8C4A2F]">
             Not Just A One-Way Street
           </p>
-          <h2 className="font-serif text-2xl sm:text-4xl font-bold text-[#2C2926] leading-tight">
+          <h2 className="font-serif text-3xl sm:text-5xl font-bold text-[#2C2926] leading-tight">
             You've supported me too.
           </h2>
           <p className="font-sans text-sm sm:text-base text-[#57483B] leading-relaxed max-w-2xl">
-            You've always had a natural way of reminding me to stay connected to the things I care about most.
+            You've always encouraged me to keep doing the things I care about. Mujhe hamesha grow karte dekhna chaha hai.
           </p>
         </div>
 
-        {/* 3 Pillars Grid */}
+        {/* 3 Pillars */}
         <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
           {supports.map((item, idx) => {
             const Icon = item.icon;
@@ -75,7 +74,7 @@ export const MutualSupportSection: React.FC = () => {
         </div>
 
         <div className="bg-[#FAF4EC] p-4 sm:p-5 rounded border-l-2 border-[#5B7A68] text-xs sm:text-sm text-[#443F3A] font-sans">
-          <strong>Thank you:</strong> Having a friend who doesn't just talk, but actively roots for your hobbies and growth, is something I truly appreciate.
+          <strong>Thank you, Monaco:</strong> Having a friend who doesn't just talk, but actively roots for your growth and creative side, is something I truly value.
         </div>
       </div>
     </section>

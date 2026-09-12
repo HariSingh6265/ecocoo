@@ -2,7 +2,7 @@ export interface StoryMetadata {
   recipient: {
     fullName: string;
     firstName: string;
-    nicknames: string[];
+    nickname: string; // "Monaco"
     birthdayFormatted: string;
     birthdayDay: number;
     birthdayMonth: string;
@@ -29,9 +29,9 @@ export interface MediaItem {
   year?: string;
   placeholderLabel: string;
   note?: string;
-  src?: string; // Optional real file path when user replaces it
+  src?: string;
   aspectRatio?: 'square' | 'portrait' | 'landscape' | 'polaroid';
-  rotation?: number; // tilt angle for scrapbook realism
+  rotation?: number;
 }
 
 export interface VersionMemory {
@@ -45,7 +45,7 @@ export interface VersionMemory {
     quote?: string;
     statBadge?: string;
   };
-  monicaVersion: {
+  monacoVersion: {
     headline: string;
     body: string;
     quote?: string;
@@ -56,8 +56,8 @@ export interface VersionMemory {
 
 export interface PersonalityTrait {
   id: string;
-  title: string;
-  iconName: string;
+  word: string;
+  hindiTitle: string;
   description: string;
   reflection: string;
   isPlayful?: boolean;

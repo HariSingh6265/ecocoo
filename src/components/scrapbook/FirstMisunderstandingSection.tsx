@@ -1,7 +1,7 @@
 "use client";
 
 import React from "react";
-import { Compass, Lightbulb, BookOpen } from "lucide-react";
+import { Compass } from "lucide-react";
 import { WashiTape } from "./WashiTape";
 import { PostageStamp } from "./PostageStamp";
 
@@ -9,10 +9,10 @@ export const FirstMisunderstandingSection: React.FC = () => {
   return (
     <section
       id="perspective"
-      className="py-20 sm:py-24 px-4 sm:px-6 relative max-w-4xl mx-auto"
+      className="py-24 sm:py-32 px-4 sm:px-6 relative max-w-4xl mx-auto"
     >
       {/* Chapter Marker */}
-      <div className="flex items-center gap-3 mb-8">
+      <div className="flex items-center gap-3 mb-10">
         <span className="font-mono text-xs font-bold text-[#8C4A2F] bg-[#FBECE7] px-2.5 py-1 rounded border border-[#F3D5CA]">
           CHAPTER 03
         </span>
@@ -22,11 +22,11 @@ export const FirstMisunderstandingSection: React.FC = () => {
 
       <div className="max-w-3xl mx-auto space-y-6">
         <div className="space-y-3">
-          <p className="font-handwriting text-xl sm:text-2xl text-[#8C4A2F]">
+          <p className="font-handwriting text-2xl sm:text-3xl text-[#8C4A2F]">
             The Early Perspective Shift
           </p>
-          <h2 className="font-serif text-2xl sm:text-4xl font-bold text-[#2C2926] leading-tight">
-            How two strangers slowly began to understand each other.
+          <h2 className="font-serif text-3xl sm:text-5xl font-bold text-[#2C2926] leading-tight">
+            Jab do strangers ne ek doosre ko samajhna shuru kiya.
           </h2>
         </div>
 
@@ -41,13 +41,13 @@ export const FirstMisunderstandingSection: React.FC = () => {
             </div>
             <div className="space-y-3 text-sm sm:text-base text-[#57483B] leading-relaxed font-sans">
               <p>
-                In the very beginning, I had texted you angrily about something related to girls because of a misunderstanding and perception I had at the time.
+                Start mein, maine ek perception aur misunderstanding ki wajah se Monaco ko ladkiyon se related thoda angrily text kar diya tha.
               </p>
               <p>
-                Instead of getting hostile or dismissing me, you actually took the time to explain things calmly. You corrected my perception and helped me see that I was looking at the situation completely wrong.
+                Lekin Monaco ne gussa hone ya argue karne ke bajaye, bohot maturely aur calmly situation explain ki. She made me realize ki main situation ko galat angle se dekh raha tha.
               </p>
-              <p className="bg-[#FAF4EC] p-3.5 rounded border-l-2 border-[#5B7A68] italic text-[#443F3A]">
-                It was a small moment, but it mattered. It showed me how patient, clear-headed, and fair-minded you were right from the start.
+              <p className="bg-[#FAF4EC] p-4 rounded border-l-2 border-[#5B7A68] italic text-[#443F3A]">
+                That was the moment I realized how patient, fair-minded, and understanding you actually are.
               </p>
             </div>
           </div>

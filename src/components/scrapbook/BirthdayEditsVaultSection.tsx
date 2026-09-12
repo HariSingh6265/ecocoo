@@ -1,8 +1,6 @@
 "use client";
 
 import React from "react";
-import { Sparkles, Film, HeartHandshake } from "lucide-react";
-import { WashiTape } from "./WashiTape";
 import { PostageStamp } from "./PostageStamp";
 import { PolaroidFrame } from "./PolaroidFrame";
 import { MEDIA_VAULT_ITEMS } from "../../data/storyData";
@@ -11,33 +9,33 @@ export const BirthdayEditsVaultSection: React.FC = () => {
   return (
     <section
       id="media-vault"
-      className="py-20 sm:py-28 px-4 sm:px-6 relative max-w-5xl mx-auto"
+      className="py-24 sm:py-32 px-4 sm:px-6 relative max-w-5xl mx-auto"
     >
       {/* Chapter Marker */}
-      <div className="flex items-center gap-3 mb-8">
+      <div className="flex items-center gap-3 mb-10">
         <span className="font-mono text-xs font-bold text-[#8C4A2F] bg-[#FBECE7] px-2.5 py-1 rounded border border-[#F3D5CA]">
-          CHAPTER 08
+          CHAPTER 11
         </span>
         <div className="h-px bg-[#EADBCE] flex-1" />
-        <PostageStamp date="ANNUAL EDITION" label="MEDIA VAULT" color="terracotta" />
+        <PostageStamp date="ANNUAL VAULT" label="CREATIVE GIFTS" color="terracotta" />
       </div>
 
-      <div className="text-center max-w-2xl mx-auto space-y-4 mb-12">
+      <div className="text-center max-w-2xl mx-auto space-y-4 mb-14">
         <p className="font-handwriting text-2xl sm:text-3xl text-[#8C4A2F]">
           The Next Edition of Our Tradition
         </p>
-        <h2 className="font-serif text-3xl sm:text-5xl font-bold text-[#2C2926] leading-tight">
+        <h2 className="font-serif text-3xl sm:text-5xl md:text-6xl font-bold text-[#2C2926] leading-tight">
           Videos, Edits, Shayari & Poems.
         </h2>
         <p className="font-sans text-sm sm:text-base text-[#6B635B] leading-relaxed">
-          For years, we've exchanged creative birthday edits and written verses. You told me my poems were "the best" and loved the edits I made every year.
+          Har saal Monaco ke liye birthday edits aur shayari banana ek sacred ritual ban chuka tha. Aapne meri poems padhi aur bola tha ki yeh best hain aur aur likha karo.
         </p>
         <div className="inline-block bg-[#FAF4EC] px-4 py-2 rounded border border-[#EADBCE] font-serif italic text-xs sm:text-sm text-[#443F3A]">
-          "So this year, instead of just another video edit... I decided to build a whole digital place."
+          "Toh iss saal, sirf ek normal video edit ke bajaye... I made this whole digital place for us."
         </div>
       </div>
 
-      {/* Grid of Polaroid Media Placeholders */}
+      {/* Grid of Film Strip / Polaroid Placeholders */}
       <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-8 sm:gap-6 justify-items-center pt-4">
         {MEDIA_VAULT_ITEMS.map((item) => (
           <PolaroidFrame
@@ -54,10 +52,9 @@ export const BirthdayEditsVaultSection: React.FC = () => {
         ))}
       </div>
 
-      {/* Subtle note about easy replacement */}
       <div className="mt-12 text-center">
         <p className="text-xs text-[#7A6C58] font-sans">
-          💡 <em>All cards above are ready for real photos, poems, and videos whenever you want to link them!</em>
+          💡 <em>All cards above are ready for real photos, poems, and edits whenever you want to drop them in!</em>
         </p>
       </div>
     </section>

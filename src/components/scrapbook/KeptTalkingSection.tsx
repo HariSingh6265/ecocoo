@@ -1,7 +1,7 @@
 "use client";
 
 import React from "react";
-import { MessageCircle, PhoneCall, HeartHandshake, Sparkles } from "lucide-react";
+import { MessageCircle, PhoneCall, HeartHandshake } from "lucide-react";
 import { WashiTape } from "./WashiTape";
 
 export const KeptTalkingSection: React.FC = () => {
@@ -9,34 +9,34 @@ export const KeptTalkingSection: React.FC = () => {
     {
       step: "01",
       icon: MessageCircle,
-      title: "One chat became another",
-      desc: "Random board exam doubts turned into everyday thoughts and check-ins.",
+      title: "Ek text se doosra text",
+      desc: "Random Class 10 board doubts turned into everyday check-ins and life updates.",
     },
     {
       step: "02",
       icon: PhoneCall,
-      title: "Then phone calls",
-      desc: "Quick questions turned into long conversations that lasted hours.",
+      title: "Phir lambi calls",
+      desc: "5-minute calls turned into 2–3 hour late-night terrace conversations.",
     },
     {
       step: "03",
       icon: HeartHandshake,
-      title: "Sharing life & supporting each other",
-      desc: "Asking 'What should I do?' and genuinely listening to each other's advice.",
+      title: "Sharing life & support",
+      desc: "'What should I do?' puchna aur genuinely ek doosre ko guide karna.",
     },
   ];
 
   return (
-    <section className="py-20 sm:py-24 px-4 sm:px-6 relative max-w-4xl mx-auto">
-      <div className="text-center space-y-4 mb-12">
+    <section className="py-24 sm:py-32 px-4 sm:px-6 relative max-w-4xl mx-auto">
+      <div className="text-center space-y-4 mb-14">
         <p className="font-handwriting text-2xl sm:text-3xl text-[#8C4A2F]">
           The Quiet Transition
         </p>
-        <h2 className="font-serif text-3xl sm:text-5xl font-bold text-[#2C2926] max-w-2xl mx-auto leading-tight">
+        <h2 className="font-serif text-3xl sm:text-5xl md:text-6xl font-bold text-[#2C2926] max-w-2xl mx-auto leading-tight">
           Nothing cinematic happened after that. We just... kept talking.
         </h2>
         <p className="font-sans text-sm sm:text-base text-[#6B635B] max-w-xl mx-auto">
-          Some friendships start with fireworks. Ours was built quietly, conversation by conversation.
+          Kuch friendships fireworks se nahi, bas continuous baaton se banti hain.
         </p>
       </div>
 
@@ -47,7 +47,7 @@ export const KeptTalkingSection: React.FC = () => {
           return (
             <div
               key={idx}
-              className="bg-white/90 p-6 rounded border border-[#EADBCE] shadow-sm relative group hover:shadow-md transition-shadow flex flex-col justify-between"
+              className="bg-white/95 p-6 rounded border border-[#EADBCE] shadow-sm relative group hover:shadow-md transition-shadow flex flex-col justify-between"
             >
               <div className="absolute -top-2.5 right-6">
                 <WashiTape
@@ -72,8 +72,8 @@ export const KeptTalkingSection: React.FC = () => {
                 </p>
               </div>
 
-              <div className="mt-4 pt-3 border-t border-[#F0E8DE] font-handwriting text-xs text-[#8C4A2F]">
-                {idx === 2 ? "And that became a friendship." : "And we kept talking..."}
+              <div className="mt-5 pt-3 border-t border-[#F0E8DE] font-handwriting text-xs text-[#8C4A2F]">
+                {idx === 2 ? "And somehow, that became a friendship." : "Aur baat hoti rahi..."}
               </div>
             </div>
           );

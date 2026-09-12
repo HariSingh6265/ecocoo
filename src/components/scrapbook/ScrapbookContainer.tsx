@@ -36,65 +36,65 @@ export const ScrapbookContainer: React.FC = () => {
         <HeroSection />
 
         {/* Subtle decorative divider */}
-        <div className="max-w-4xl mx-auto px-4 flex items-center justify-center my-4">
+        <div className="max-w-4xl mx-auto px-4 flex items-center justify-center my-6">
           <WashiTape width="w-32" tilt={1} variant="parchment" />
         </div>
 
-        {/* Section 01: Origins in Class 10 & Telegram */}
+        {/* Chapter 01: Origins in Class 10 & Telegram */}
         <TelegramOriginSection />
 
-        {/* Section 02: The Cyber Police Era */}
+        {/* Chapter 02: The Cyber Police Era */}
         <CyberPoliceSection />
 
-        {/* Section 03: The Perspective Shift & Understanding */}
+        {/* Chapter 03: The Perspective Shift & Understanding */}
         <FirstMisunderstandingSection />
 
-        {/* Section 04: Somehow We Kept Talking */}
-        <KeptTalkingSection />
-
-        {/* Section 05: No Video Call Ever */}
+        {/* Chapter 04: The One Thing We Never Did (Zero Video Calls) */}
         <NoVideoCallSection />
 
-        {/* Section 06: The "Aap" Problem */}
+        {/* Chapter 05: The "Aap" Problem */}
         <AapProblemSection />
 
-        {/* Section 07: The Gap & Resuming Without Awkwardness */}
+        {/* Chapter 06: The Gap & Resuming Without Awkwardness */}
         <TheGapSection />
 
-        {/* Section 08: The Terrace Late Night Sky */}
+        {/* Chapter 07: The Terrace Late Night Sky */}
         <TerraceSection />
 
-        {/* Section 09: The 2–3 Hour Calls */}
+        {/* Chapter 08: The 2–3 Hour Calls Disappearing */}
         <LongCallsSection />
 
-        {/* Section 10: We Used to Talk All Day */}
+        {/* Transition: Somehow We Kept Talking */}
+        <KeptTalkingSection />
+
+        {/* Chapter 09: We Used to Talk All Day / What Should I Do? */}
         <AllDaySharingSection />
 
-        {/* Section 11: The 89% Board Exam Incident */}
+        {/* Chapter 10: The 89% Board Exam Incident */}
         <ResultsComparisonSection />
 
-        {/* Section 12: Birthday Edits, Shayari & Poems Vault */}
+        {/* Chapter 11: Creative Archive (Edits, Shayari & Poems) */}
         <BirthdayEditsVaultSection />
 
-        {/* Section 13: The Friendship That Remembered */}
+        {/* Chapter 12: The Friendship That Remembered */}
         <UnbrokenFriendshipSection />
 
-        {/* Section 14: The September 15 Pune Incident */}
+        {/* Chapter 13: The September 15 Pune Incident */}
         <PuneIncidentSection />
 
-        {/* Section 15: The Classified Memory Easter Egg */}
+        {/* Chapter 14: The Classified Memory Easter Egg */}
         <ClassifiedMemorySection />
 
-        {/* Section 16: Things You Don't Realize About Yourself */}
+        {/* Chapter 15: Things You Don't Realize About Yourself */}
         <PersonalitySection />
 
-        {/* Section 17: You Support Me Too */}
+        {/* Chapter 16: You Support Me Too */}
         <MutualSupportSection />
 
-        {/* Section 18: Family & Roops Shared Birthday */}
+        {/* Chapter 17: Family & Roops Shared Birthday */}
         <FamilyNoteSection />
 
-        {/* Section 19: The Emotional Birthday Reveal & Climax */}
+        {/* Chapter 18: The Emotional Birthday Reveal & Climax */}
         <FinalMessageSection />
       </main>
 
@@ -102,13 +102,16 @@ export const ScrapbookContainer: React.FC = () => {
       <CustomizerHelperModal />
 
       {/* Footer */}
-      <footer className="py-12 border-t border-[#EADBCE] text-center text-xs text-[#7A6C58] bg-[#FAF7F2]">
-        <div className="max-w-md mx-auto space-y-2 px-4">
-          <p className="font-serif italic text-sm text-[#443F3A]">
+      <footer className="py-16 border-t border-[#EADBCE] text-center text-xs text-[#7A6C58] bg-[#FAF7F2]">
+        <div className="max-w-md mx-auto space-y-3 px-4">
+          <p className="font-serif italic text-base text-[#443F3A]">
             "Some people remain important anyway."
           </p>
-          <p className="font-mono text-[11px] text-stone-400">
-            A Handcrafted Scrapbook for Monica • 15 September
+          <p className="font-mono text-xs text-[#8C4A2F] font-semibold">
+            A Handcrafted Scrapbook for Monaco • 15 September
+          </p>
+          <p className="font-handwriting text-sm text-stone-500">
+            Aap hi rahenge. 😂
           </p>
         </div>
       </footer>

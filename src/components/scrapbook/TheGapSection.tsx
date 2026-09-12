@@ -1,53 +1,56 @@
 "use client";
 
 import React from "react";
-import { Pause, Play, HeartHandshake, Sparkles } from "lucide-react";
-import { WashiTape } from "./WashiTape";
+import { Pause, Play } from "lucide-react";
 import { PostageStamp } from "./PostageStamp";
 
 export const TheGapSection: React.FC = () => {
   return (
-    <section className="py-20 sm:py-24 px-4 sm:px-6 relative max-w-4xl mx-auto">
-      <div className="max-w-2xl mx-auto text-center space-y-6">
-        <PostageStamp date="PAUSE / RESUME" label="REAL FRIENDSHIP" color="sage" />
+    <section
+      id="the-gap"
+      className="py-32 sm:py-44 px-4 sm:px-6 relative max-w-3xl mx-auto text-center"
+    >
+      {/* Chapter Marker */}
+      <div className="flex items-center justify-center gap-3 mb-16">
+        <span className="font-mono text-xs font-bold text-[#8C4A2F] bg-[#FBECE7] px-2.5 py-1 rounded border border-[#F3D5CA]">
+          CHAPTER 06
+        </span>
+        <PostageStamp date="PAUSE / PLAY" label="VISUAL SILENCE" color="sage" />
+      </div>
 
-        <div className="space-y-3">
-          <p className="font-handwriting text-2xl sm:text-3xl text-[#8C4A2F]">
-            The Silence That Felt Safe
+      {/* Visual Silence & Large Spacing (No Boxy Cards) */}
+      <div className="space-y-12">
+        <div className="space-y-4">
+          <p className="font-serif text-3xl sm:text-5xl md:text-6xl text-[#2C2926] leading-tight font-normal">
+            Phir ek phase aaya...
+            <br />
+            <span className="text-[#8C4A2F] font-bold">jab baat nahi hui.</span>
           </p>
-          <h2 className="font-serif text-3xl sm:text-5xl font-bold text-[#2C2926] leading-tight">
-            We pressed pause instead of goodbye.
-          </h2>
+          <p className="font-handwriting text-2xl text-stone-500">
+            Kaafi time tak nahi hui.
+          </p>
         </div>
 
-        {/* Highlight Card */}
-        <div className="bg-white/90 p-8 sm:p-10 rounded border border-[#EADBCE] shadow-sm relative text-left space-y-5">
-          <div className="absolute -top-3 right-10">
-            <WashiTape width="w-24" tilt={2} variant="sage" />
+        {/* Minimal Paused Timeline Indicator */}
+        <div className="flex items-center justify-center gap-4 py-8">
+          <div className="w-16 sm:w-24 h-px bg-stone-300" />
+          <div className="w-10 h-10 rounded-full border border-dashed border-[#8C4A2F] flex items-center justify-center text-[#8C4A2F] bg-[#FAF7F2]">
+            <Pause className="w-4 h-4" />
           </div>
+          <div className="w-16 sm:w-24 h-px bg-stone-300" />
+        </div>
 
-          <div className="flex items-center gap-4 text-xs font-mono text-stone-500 pb-3 border-b border-[#F0E8DE]">
-            <span className="flex items-center gap-1">
-              <Pause className="w-3.5 h-3.5 text-[#8C4A2F]" /> Silence
-            </span>
-            <span>→</span>
-            <span className="flex items-center gap-1 text-emerald-700">
-              <Play className="w-3.5 h-3.5" /> Seamless Resume
-            </span>
-          </div>
-
-          <div className="space-y-4 text-sm sm:text-base text-[#57483B] font-sans leading-relaxed">
-            <p>
-              There was a period when we didn't talk for days and weeks.
+        <div className="space-y-6 max-w-xl mx-auto">
+          <p className="font-serif text-2xl sm:text-4xl text-[#2C2926] font-medium leading-relaxed">
+            But when we started talking again...
+          </p>
+          <div className="space-y-3 font-sans text-base sm:text-lg text-[#57483B] leading-relaxed">
+            <p>No awkward restart. No <em>"aur batao itne din kahan the"</em>.</p>
+            <p className="font-serif italic text-xl sm:text-2xl text-[#8C4A2F] pt-2">
+              "Bas wahi conversation dobara shuru ho gayi... jaise kuch hua hi nahi."
             </p>
-            <p>
-              And then when we started talking again, there was zero awkwardness. No stiff <em>"so... what have you been up to?"</em> or feeling like strangers.
-            </p>
-            <p className="font-serif text-base sm:text-lg text-[#2C2926] italic bg-[#FAF4EC] p-4 rounded border-l-2 border-[#8C4A2F]">
-              "It just continued. Like we had pressed pause instead of goodbye."
-            </p>
-            <p className="text-xs text-[#7A6C58]">
-              That was one of the moments that made me realize this friendship wasn't fragile. It was genuine.
+            <p className="text-xs sm:text-sm text-stone-500 pt-2 font-mono">
+              Like we had pressed pause instead of goodbye.
             </p>
           </div>
         </div>

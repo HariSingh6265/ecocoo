@@ -1,10 +1,9 @@
 "use client";
 
 import React, { useState } from "react";
-import { MapPin, CalendarX, Laugh, CheckCircle2, Navigation } from "lucide-react";
+import { MapPin, Laugh } from "lucide-react";
 import { WashiTape } from "./WashiTape";
 import { PostageStamp } from "./PostageStamp";
-import { PUNE_INCIDENT_DATA } from "../../data/storyData";
 
 export const PuneIncidentSection: React.FC = () => {
   const [showRescueNote, setShowRescueNote] = useState(false);
@@ -12,12 +11,12 @@ export const PuneIncidentSection: React.FC = () => {
   return (
     <section
       id="pune-incident"
-      className="py-20 sm:py-24 px-4 sm:px-6 relative max-w-4xl mx-auto"
+      className="py-24 sm:py-32 px-4 sm:px-6 relative max-w-4xl mx-auto"
     >
       {/* Chapter Marker */}
-      <div className="flex items-center gap-3 mb-8">
+      <div className="flex items-center gap-3 mb-10">
         <span className="font-mono text-xs font-bold text-[#8C4A2F] bg-[#FBECE7] px-2.5 py-1 rounded border border-[#F3D5CA]">
-          CHAPTER 10
+          CHAPTER 13
         </span>
         <div className="h-px bg-[#EADBCE] flex-1" />
         <PostageStamp date="PUNE 2024" label="THE BLUNDER" color="terracotta" />
@@ -26,25 +25,25 @@ export const PuneIncidentSection: React.FC = () => {
       <div className="grid grid-cols-1 md:grid-cols-12 gap-8 items-center">
         {/* Story copy */}
         <div className="md:col-span-7 space-y-5">
-          <p className="font-handwriting text-xl sm:text-2xl text-[#8C4A2F]">
+          <p className="font-handwriting text-2xl sm:text-3xl text-[#8C4A2F]">
             The Self-Own of 2024
           </p>
-          <h2 className="font-serif text-2xl sm:text-4xl font-bold text-[#2C2926] leading-tight">
-            The Infamous "September 16" Incident.
+          <h2 className="font-serif text-3xl sm:text-5xl font-bold text-[#2C2926] leading-tight">
+            The Infamous "16th September" Incident.
           </h2>
 
           <div className="space-y-4 text-sm sm:text-base text-[#57483B] font-sans leading-relaxed">
             <p>
-              On 29 July, you remembered my birthday and wished me right at 12:00 AM midnight like a champ.
+              29 July ko Monaco ne mujhe raat ke 12:00 AM sharp wish kiya, bina ek second late hue.
             </p>
             <p>
-              And then there was me in 2024: stuck in Pune deeply occupied with Rotaract work, completely losing track of what day it was, and somehow managing to miss September 15.
+              And me? 2024 mein main Pune mein tha Rotaract work mein, full busy, lost track of date... aur somehow main 15 September ko wish karna bhool gaya! 😭
             </p>
-            <p className="bg-[#FAF4EC] p-3.5 rounded border-l-2 border-[#8C4A2F] italic text-[#443F3A]">
-              "Yes. I know. I remembered on September 16 and wished you immediately — and I still haven’t heard the end of it! 😂"
+            <p className="bg-[#FAF4EC] p-4 rounded border-l-2 border-[#8C4A2F] italic text-[#443F3A]">
+              "Yes. I know. Agle din 16 September ko yaad aaya aur wish kiya — aur aaj tak Monaco mujhe iss baat ke taane maarti hai! 😂"
             </p>
             <p className="text-xs text-[#7A6C58]">
-              (Consider this entire website my permanent apology and tribute!)
+              (Iss website ko mera permanent apology aur redemption gift samjho!)
             </p>
           </div>
         </div>
@@ -60,7 +59,7 @@ export const PuneIncidentSection: React.FC = () => {
               <div className="flex items-center justify-between pb-3 border-b border-[#F0E8DE]">
                 <div className="flex items-center gap-1.5 text-xs font-bold text-[#2C2926]">
                   <MapPin className="w-4 h-4 text-[#8C4A2F]" />
-                  <span>Pune, 2024 Dispatch</span>
+                  <span>Pune, 2024 Log</span>
                 </div>
                 <span className="text-[10px] font-mono bg-amber-50 text-amber-800 px-2 py-0.5 rounded border border-amber-200">
                   Rotaract Trip
@@ -74,12 +73,12 @@ export const PuneIncidentSection: React.FC = () => {
                 </div>
 
                 <div className="flex items-center justify-between p-2 rounded bg-[#FBECE7] border border-[#F3D5CA]">
-                  <span>15 Sept (Monica's B'day):</span>
+                  <span>15 Sept (Monaco's B'day):</span>
                   <span className="font-mono font-bold text-[#8C3D21]">Forgot in Pune 🙈</span>
                 </div>
 
                 <div className="flex items-center justify-between p-2 rounded bg-[#FAF7F2] border border-[#EADBCE]">
-                  <span>16 Sept (Rescue Wish):</span>
+                  <span>16 Sept (Late Rescue):</span>
                   <span className="font-mono font-bold text-amber-700">Wished next day 😅</span>
                 </div>
               </div>
@@ -89,12 +88,12 @@ export const PuneIncidentSection: React.FC = () => {
                 className="w-full py-2 px-3 bg-[#FAF7F2] hover:bg-[#F5EFEB] text-stone-700 text-xs font-mono rounded border border-[#EADBCE] transition-colors flex items-center justify-center gap-1.5"
               >
                 <Laugh className="w-3.5 h-3.5 text-[#8C4A2F]" />
-                <span>{showRescueNote ? "Hide Verdict" : "Monica's Verdict"}</span>
+                <span>{showRescueNote ? "Hide Verdict" : "Monaco's Verdict"}</span>
               </button>
 
               {showRescueNote && (
                 <div className="p-3 bg-[#FFFDF8] rounded border border-[#EADBCE] text-xs font-handwriting text-[#8C4A2F] text-center animate-fade-in">
-                  "You will literally never live this down, Harshu! 😂"
+                  "Harshu, tum iss baat se kabhi nahi bach sakte! 😂"
                 </div>
               )}
             </div>

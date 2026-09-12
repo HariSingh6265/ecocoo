@@ -27,10 +27,12 @@ const mono = JetBrains_Mono({
 });
 
 export const metadata: Metadata = {
-  title: "Before I say Happy Birthday — A Friendship Journal",
-  description: "A digital scrapbook and friendship story dedicated to Monica Gaha.",
-  icons: {
-    icon: "/favicon.ico",
+  title: "Before I say Happy Birthday — A Story for Monaco",
+  description: "A digital scrapbook and friendship journal dedicated to Monaco from Harshu.",
+  openGraph: {
+    title: "Before I say Happy Birthday — For Monaco",
+    description: "A collection of things I remember about us.",
+    type: "website",
   },
 };
 

@@ -1,6 +1,6 @@
 # A Digital Friendship Scrapbook & Journal 📖✨
 
-> Dedicated to **Monica Gaha** from **Hari Singh**.
+> Dedicated to **Monaco Gaha** from **Hari Singh**.
 > A handcrafted, digital scroll narrative celebrating years of memories, laughter, banter, and unwavering friendship.
 
 ---

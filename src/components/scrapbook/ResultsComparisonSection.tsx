@@ -1,27 +1,27 @@
 "use client";
 
 import React, { useState } from "react";
-import { Smile, Frown, Sparkles, Scale, RefreshCw } from "lucide-react";
+import { Smile, Frown } from "lucide-react";
 import { WashiTape } from "./WashiTape";
 import { PostageStamp } from "./PostageStamp";
 import { VERSION_MEMORIES } from "../../data/storyData";
 
 export const ResultsComparisonSection: React.FC = () => {
-  const [activeTab, setActiveTab] = useState<"both" | "hari" | "monica">("both");
-  const mem = VERSION_MEMORIES[0]; // class 10 results memory
+  const [activeTab, setActiveTab] = useState<"both" | "hari" | "monaco">("both");
+  const mem = VERSION_MEMORIES[0];
 
   return (
     <section
       id="board-results"
-      className="py-20 sm:py-24 px-4 sm:px-6 relative max-w-4xl mx-auto"
+      className="py-24 sm:py-32 px-4 sm:px-6 relative max-w-4xl mx-auto"
     >
       {/* Chapter Marker */}
-      <div className="flex items-center gap-3 mb-8">
+      <div className="flex items-center gap-3 mb-10">
         <span className="font-mono text-xs font-bold text-[#8C4A2F] bg-[#FBECE7] px-2.5 py-1 rounded border border-[#F3D5CA]">
-          CHAPTER 07
+          CHAPTER 10
         </span>
         <div className="h-px bg-[#EADBCE] flex-1" />
-        <PostageStamp date="~89% vs 82.6%" label="BOARD EXAMS" color="terracotta" />
+        <PostageStamp date="~89% vs 82.6%" label="BOARD RESULTS" color="terracotta" />
       </div>
 
       <div className="space-y-6">
@@ -29,11 +29,11 @@ export const ResultsComparisonSection: React.FC = () => {
           <p className="font-handwriting text-2xl sm:text-3xl text-[#8C4A2F]">
             The Great Board Results Paradox
           </p>
-          <h2 className="font-serif text-3xl sm:text-4xl font-bold text-[#2C2926] leading-tight">
+          <h2 className="font-serif text-3xl sm:text-5xl font-bold text-[#2C2926] leading-tight">
             The "89%" Incident: Your Version vs My Version
           </h2>
           <p className="font-sans text-xs sm:text-sm text-[#6B635B]">
-            Two friends looking at board exam scores with completely opposite emotional reactions.
+            Results day: Do log, do alag alag scores, aur totally opposite emotional reactions!
           </p>
         </div>
 
@@ -41,7 +41,7 @@ export const ResultsComparisonSection: React.FC = () => {
         <div className="flex items-center justify-center gap-2 pt-2">
           <button
             onClick={() => setActiveTab("both")}
-            className={`px-3 py-1.5 rounded-full text-xs font-mono font-medium transition-all ${
+            className={`px-3.5 py-1.5 rounded-full text-xs font-mono font-medium transition-all ${
               activeTab === "both"
                 ? "bg-[#2C2926] text-white shadow-sm"
                 : "bg-white text-stone-700 border border-[#EADBCE] hover:bg-[#FAF7F2]"
@@ -51,32 +51,32 @@ export const ResultsComparisonSection: React.FC = () => {
           </button>
           <button
             onClick={() => setActiveTab("hari")}
-            className={`px-3 py-1.5 rounded-full text-xs font-mono font-medium transition-all ${
+            className={`px-3.5 py-1.5 rounded-full text-xs font-mono font-medium transition-all ${
               activeTab === "hari"
                 ? "bg-[#8C4A2F] text-white shadow-sm"
                 : "bg-white text-stone-700 border border-[#EADBCE] hover:bg-[#FAF7F2]"
             }`}
           >
-            Hari's Version (82.6%)
+            Hari's View (82.6%)
           </button>
           <button
-            onClick={() => setActiveTab("monica")}
-            className={`px-3 py-1.5 rounded-full text-xs font-mono font-medium transition-all ${
-              activeTab === "monica"
+            onClick={() => setActiveTab("monaco")}
+            className={`px-3.5 py-1.5 rounded-full text-xs font-mono font-medium transition-all ${
+              activeTab === "monaco"
                 ? "bg-[#8C4A2F] text-white shadow-sm"
                 : "bg-white text-stone-700 border border-[#EADBCE] hover:bg-[#FAF7F2]"
             }`}
           >
-            Monica's Version (~89%)
+            Monaco's View (~89%)
           </button>
         </div>
 
-        {/* Comparison Cards Container */}
+        {/* Editorial Split Screen Cards */}
         <div className="grid grid-cols-1 md:grid-cols-2 gap-6 relative pt-4">
           {/* Hari's Card */}
           {(activeTab === "both" || activeTab === "hari") && (
             <div
-              className={`bg-white rounded-lg p-6 sm:p-7 border border-[#EADBCE] shadow-sm relative flex flex-col justify-between transition-all ${
+              className={`bg-white rounded-lg p-6 sm:p-8 border border-[#EADBCE] shadow-sm relative flex flex-col justify-between transition-all ${
                 activeTab === "hari" ? "md:col-span-2 max-w-xl mx-auto" : ""
               }`}
             >
@@ -93,7 +93,7 @@ export const ResultsComparisonSection: React.FC = () => {
                     </span>
                   </div>
                   <span className="font-mono text-[10px] bg-emerald-50 text-emerald-800 px-2 py-0.5 rounded border border-emerald-200">
-                    82.6% • Completely Chilling
+                    82.6% • Relaxed & Happy 😎
                   </span>
                 </div>
 
@@ -103,18 +103,18 @@ export const ResultsComparisonSection: React.FC = () => {
               </div>
 
               <div className="mt-5 pt-3 border-t border-[#F0E8DE]">
-                <p className="font-handwriting text-sm text-[#8C4A2F] italic">
+                <p className="font-handwriting text-sm sm:text-base text-[#8C4A2F] italic">
                   "{mem.hariVersion.quote}"
                 </p>
               </div>
             </div>
           )}
 
-          {/* Monica's Card */}
-          {(activeTab === "both" || activeTab === "monica") && (
+          {/* Monaco's Card */}
+          {(activeTab === "both" || activeTab === "monaco") && (
             <div
-              className={`bg-white rounded-lg p-6 sm:p-7 border border-[#EADBCE] shadow-sm relative flex flex-col justify-between transition-all ${
-                activeTab === "monica" ? "md:col-span-2 max-w-xl mx-auto" : ""
+              className={`bg-white rounded-lg p-6 sm:p-8 border border-[#EADBCE] shadow-sm relative flex flex-col justify-between transition-all ${
+                activeTab === "monaco" ? "md:col-span-2 max-w-xl mx-auto" : ""
               }`}
             >
               <div className="absolute -top-3 right-6">
@@ -126,22 +126,22 @@ export const ResultsComparisonSection: React.FC = () => {
                   <div className="flex items-center gap-2">
                     <Frown className="w-4 h-4 text-[#C25E3B]" />
                     <span className="font-serif font-bold text-sm text-[#2C2926]">
-                      {mem.monicaVersion.headline}
+                      {mem.monacoVersion.headline}
                     </span>
                   </div>
                   <span className="font-mono text-[10px] bg-rose-50 text-rose-800 px-2 py-0.5 rounded border border-rose-200">
-                    ~89% • Heartbroken at the time 😭
+                    ~89% • Heartbroken at that moment 😭
                   </span>
                 </div>
 
                 <div className="space-y-3 font-sans text-xs sm:text-sm text-[#57483B] leading-relaxed">
-                  <p>{mem.monicaVersion.body}</p>
+                  <p>{mem.monacoVersion.body}</p>
                 </div>
               </div>
 
               <div className="mt-5 pt-3 border-t border-[#F0E8DE]">
-                <p className="font-handwriting text-sm text-[#8C4A2F] italic">
-                  "{mem.monicaVersion.quote}"
+                <p className="font-handwriting text-sm sm:text-base text-[#8C4A2F] italic">
+                  "{mem.monacoVersion.quote}"
                 </p>
               </div>
             </div>
