@@ -146,7 +146,7 @@ export const MEDIA_VAULT_ITEMS: MediaItem[] = [
     subtitle: "Class 10 Board Prep Archive",
     placeholderLabel: "[INSERT TELEGRAM SCREENSHOT]",
     note: "Where it all started: Vedantu board-prep group, do random students.",
-    src: "/photos/WhatsApp Image 2026-09-13 at 2.59.37 AM.jpeg",
+    src: "/photos/Telegram Group.jpeg",
     rotation: 1,
     aspectRatio: "landscape",
   },
