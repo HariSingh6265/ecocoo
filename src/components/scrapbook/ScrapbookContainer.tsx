@@ -22,7 +22,6 @@ import { PersonalitySection } from "./PersonalitySection";
 import { MutualSupportSection } from "./MutualSupportSection";
 import { FamilyNoteSection } from "./FamilyNoteSection";
 import { FinalMessageSection } from "./FinalMessageSection";
-import { CustomizerHelperModal } from "./CustomizerHelperModal";
 import { WashiTape } from "./WashiTape";
 
 export const ScrapbookContainer: React.FC = () => {
@@ -97,9 +96,6 @@ export const ScrapbookContainer: React.FC = () => {
         {/* Chapter 18: The Emotional Birthday Reveal & Climax */}
         <FinalMessageSection />
       </main>
-
-      {/* Floating customize guide modal */}
-      <CustomizerHelperModal />
 
       {/* Footer */}
       <footer className="py-16 border-t border-[#EADBCE] text-center text-xs text-[#7A6C58] bg-[#FAF7F2]">

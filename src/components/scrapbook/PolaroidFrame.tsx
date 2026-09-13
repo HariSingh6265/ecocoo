@@ -1,7 +1,7 @@
 "use client";
 
 import React, { useState } from "react";
-import { Image as ImageIcon, Video, FileText, Sparkles, ZoomIn, X, Copy, Check, Play } from "lucide-react";
+import { Image as ImageIcon, Video, FileText, Sparkles, ZoomIn, X, Play } from "lucide-react";
 import { WashiTape } from "./WashiTape";
 
 interface PolaroidFrameProps {
@@ -28,15 +28,14 @@ export const PolaroidFrame: React.FC<PolaroidFrameProps> = ({
   className = "",
 }) => {
   const [isZoomed, setIsZoomed] = useState(false);
-  const [copied, setCopied] = useState(false);
   const [hasError, setHasError] = useState(false);
 
   const isVideoFile = Boolean(
     src && (
-      src.toLowerCase().endsWith(".mp4") || 
-      src.toLowerCase().endsWith(".webm") || 
-      src.toLowerCase().endsWith(".mov") || 
-      src.toLowerCase().endsWith(".m4v")
+      src.toLowerCase().includes(".mp4") || 
+      src.toLowerCase().includes(".webm") || 
+      src.toLowerCase().includes(".mov") || 
+      src.toLowerCase().includes(".m4v")
     )
   );
 
@@ -64,15 +63,6 @@ export const PolaroidFrame: React.FC<PolaroidFrameProps> = ({
       case "polaroid":
       default:
         return "aspect-[4/4.2]";
-    }
-  };
-
-  const handleCopyTag = (e: React.MouseEvent) => {
-    e.stopPropagation();
-    if (typeof navigator !== "undefined" && navigator.clipboard) {
-      navigator.clipboard.writeText(placeholderLabel);
-      setCopied(true);
-      setTimeout(() => setCopied(false), 2000);
     }
   };
 
@@ -136,8 +126,8 @@ export const PolaroidFrame: React.FC<PolaroidFrameProps> = ({
                 <div className="font-mono text-xs font-semibold tracking-wider text-[#8C4A2F] bg-[#FBECE7] px-2.5 py-1 rounded border border-[#F3D5CA]">
                   {placeholderLabel}
                 </div>
-                <p className="text-[11px] text-[#7A6C58] max-w-[200px] leading-relaxed">
-                  Click to inspect preview
+                <p className="text-[11px] text-[#7A6C58] max-w-[200px] leading-relaxed font-handwriting">
+                  A memory from our archive
                 </p>
               </div>
             )}
@@ -145,7 +135,7 @@ export const PolaroidFrame: React.FC<PolaroidFrameProps> = ({
             {/* Hover preview badge */}
             <div className="absolute inset-0 bg-black/10 opacity-0 group-hover:opacity-100 transition-opacity flex items-center justify-center pointer-events-none">
               <span className="bg-white/90 backdrop-blur-sm text-xs font-medium px-2.5 py-1 rounded-full text-stone-800 flex items-center gap-1 shadow-sm">
-                <ZoomIn className="w-3.5 h-3.5" /> Preview
+                <ZoomIn className="w-3.5 h-3.5" /> View
               </span>
             </div>
           </div>
@@ -187,7 +177,7 @@ export const PolaroidFrame: React.FC<PolaroidFrameProps> = ({
             </button>
 
             <div className="flex items-center gap-2 text-xs font-mono text-[#8C4A2F] uppercase tracking-wider mb-2">
-              <Sparkles className="w-3.5 h-3.5" /> Memory Vault Item
+              <Sparkles className="w-3.5 h-3.5" /> Memory Archive
             </div>
 
             <h3 className="font-serif text-xl font-bold text-[#2C2926] mb-1">
@@ -218,26 +208,10 @@ export const PolaroidFrame: React.FC<PolaroidFrameProps> = ({
                   />
                 )}
               </div>
-            ) : (
-              <div className="bg-white p-4 rounded border border-[#EADBCE] my-4 text-center">
-                <div className="font-mono text-sm font-bold text-[#8C3D21] bg-[#FBECE7] p-2.5 rounded border border-[#F3D5CA] mb-2 flex items-center justify-between">
-                  <span>{placeholderLabel}</span>
-                  <button
-                    onClick={handleCopyTag}
-                    className="text-xs bg-white px-2 py-1 rounded border border-[#EADBCE] text-stone-700 hover:bg-stone-50 flex items-center gap-1"
-                  >
-                    {copied ? <Check className="w-3 h-3 text-emerald-600" /> : <Copy className="w-3 h-3" />}
-                    {copied ? "Copied" : "Copy Tag"}
-                  </button>
-                </div>
-                <p className="text-xs text-stone-500 text-left leading-relaxed">
-                  <strong>How to replace:</strong> Put your file in <code className="bg-stone-100 px-1 py-0.5 rounded font-mono text-[11px]">public/photos/</code> or <code className="bg-stone-100 px-1 py-0.5 rounded font-mono text-[11px]">public/videos/</code>, then open <code className="bg-stone-100 px-1 py-0.5 rounded font-mono text-[11px]">src/data/storyData.ts</code> and set <code className="bg-stone-100 px-1 py-0.5 rounded font-mono text-[11px]">src: '/photos/your_file.jpg'</code>.
-                </p>
-              </div>
-            )}
+            ) : null}
 
             {note && (
-              <p className="text-sm text-[#57483B] leading-relaxed italic bg-[#F5EFEB] p-3 rounded border-l-2 border-[#8C4A2F]">
+              <p className="text-sm text-[#57483B] leading-relaxed italic bg-[#F5EFEB] p-3 rounded border-l-2 border-[#8C4A2F] my-3">
                 "{note}"
               </p>
             )}
@@ -247,7 +221,7 @@ export const PolaroidFrame: React.FC<PolaroidFrameProps> = ({
                 onClick={() => setIsZoomed(false)}
                 className="px-4 py-1.5 bg-[#2C2926] text-white text-xs font-medium rounded hover:bg-stone-800 transition-colors"
               >
-                Close Preview
+                Close
               </button>
             </div>
           </div>
