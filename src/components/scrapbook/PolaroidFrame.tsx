@@ -29,14 +29,15 @@ export const PolaroidFrame: React.FC<PolaroidFrameProps> = ({
 }) => {
   const [isZoomed, setIsZoomed] = useState(false);
   const [copied, setCopied] = useState(false);
+  const [hasError, setHasError] = useState(false);
 
-  const isVideoFile = src && (
-    src.endsWith(".mp4") || 
-    src.endsWith(".webm") || 
-    src.endsWith(".mov") || 
-    src.endsWith(".m4v") ||
-    type === "video" || 
-    type === "edit"
+  const isVideoFile = Boolean(
+    src && (
+      src.toLowerCase().endsWith(".mp4") || 
+      src.toLowerCase().endsWith(".webm") || 
+      src.toLowerCase().endsWith(".mov") || 
+      src.toLowerCase().endsWith(".m4v")
+    )
   );
 
   const getIcon = () => {
@@ -95,23 +96,25 @@ export const PolaroidFrame: React.FC<PolaroidFrameProps> = ({
           {/* Media Window */}
           <div
             onClick={() => setIsZoomed(true)}
-            className={`w-full ${getAspectClass()} bg-[#FAF6F0] rounded-[2px] border border-[#E5DACD] flex flex-col items-center justify-center p-4 relative overflow-hidden group cursor-pointer`}
+            className={`w-full ${getAspectClass()} bg-[#FAF6F0] rounded-[2px] border border-[#E5DACD] flex flex-col items-center justify-center p-2 relative overflow-hidden group cursor-pointer`}
           >
-            {src ? (
+            {src && !hasError ? (
               isVideoFile ? (
                 // Real Video
-                <div className="w-full h-full relative flex items-center justify-center bg-black rounded-[2px]">
+                <div className="w-full h-full relative flex items-center justify-center bg-stone-900 rounded-[2px] overflow-hidden">
                   <video
                     src={src}
                     muted
                     loop
                     playsInline
                     autoPlay
+                    preload="metadata"
+                    onError={() => setHasError(true)}
                     className="w-full h-full object-cover rounded-[2px]"
                   />
-                  <div className="absolute inset-0 bg-black/20 flex items-center justify-center">
-                    <div className="p-2.5 rounded-full bg-white/80 text-[#8C4A2F] shadow-sm">
-                      <Play className="w-5 h-5 fill-[#8C4A2F]" />
+                  <div className="absolute inset-0 bg-black/25 flex items-center justify-center group-hover:bg-black/10 transition-colors">
+                    <div className="p-2.5 rounded-full bg-white/90 text-[#8C4A2F] shadow-md transform group-hover:scale-110 transition-transform">
+                      <Play className="w-4 h-4 fill-[#8C4A2F]" />
                     </div>
                   </div>
                 </div>
@@ -120,6 +123,7 @@ export const PolaroidFrame: React.FC<PolaroidFrameProps> = ({
                 <img
                   src={src}
                   alt={title}
+                  onError={() => setHasError(true)}
                   className="w-full h-full object-cover rounded-[2px]"
                 />
               )
@@ -133,7 +137,7 @@ export const PolaroidFrame: React.FC<PolaroidFrameProps> = ({
                   {placeholderLabel}
                 </div>
                 <p className="text-[11px] text-[#7A6C58] max-w-[200px] leading-relaxed">
-                  Click to inspect replacement guide
+                  Click to inspect preview
                 </p>
               </div>
             )}
@@ -196,7 +200,7 @@ export const PolaroidFrame: React.FC<PolaroidFrameProps> = ({
             )}
 
             {/* If real media exists, show media player / image */}
-            {src ? (
+            {src && !hasError ? (
               <div className="my-4 rounded border border-[#EADBCE] overflow-hidden bg-black flex items-center justify-center">
                 {isVideoFile ? (
                   <video
@@ -204,13 +208,13 @@ export const PolaroidFrame: React.FC<PolaroidFrameProps> = ({
                     controls
                     autoPlay
                     playsInline
-                    className="w-full max-h-[350px] object-contain"
+                    className="w-full max-h-[380px] object-contain"
                   />
                 ) : (
                   <img
                     src={src}
                     alt={title}
-                    className="w-full max-h-[350px] object-contain bg-[#FAF7F2]"
+                    className="w-full max-h-[380px] object-contain bg-[#FAF7F2]"
                   />
                 )}
               </div>
@@ -227,7 +231,7 @@ export const PolaroidFrame: React.FC<PolaroidFrameProps> = ({
                   </button>
                 </div>
                 <p className="text-xs text-stone-500 text-left leading-relaxed">
-                  <strong>How to replace:</strong> Put your file in <code className="bg-stone-100 px-1 py-0.5 rounded font-mono text-[11px]">public/photos/</code> or <code className="bg-stone-100 px-1 py-0.5 rounded font-mono text-[11px]">public/videos/</code>, then open <code className="bg-stone-100 px-1 py-0.5 rounded font-mono text-[11px]">src/data/storyData.ts</code> and add <code className="bg-stone-100 px-1 py-0.5 rounded font-mono text-[11px]">src: '/photos/your_file.jpg'</code>.
+                  <strong>How to replace:</strong> Put your file in <code className="bg-stone-100 px-1 py-0.5 rounded font-mono text-[11px]">public/photos/</code> or <code className="bg-stone-100 px-1 py-0.5 rounded font-mono text-[11px]">public/videos/</code>, then open <code className="bg-stone-100 px-1 py-0.5 rounded font-mono text-[11px]">src/data/storyData.ts</code> and set <code className="bg-stone-100 px-1 py-0.5 rounded font-mono text-[11px]">src: '/photos/your_file.jpg'</code>.
                 </p>
               </div>
             )}
